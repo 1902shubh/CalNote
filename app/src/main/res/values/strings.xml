@@ -17,11 +17,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_tabbed_activity">Weekly View</string>
-    <string name="tab_text_1">MON</string>
-    <string name="tab_text_2">TUE</string>
-    <string name="tab_text_3">WED</string>
-    <string name="tab_text_4">THU</string>
-    <string name="tab_text_5">FRI</string>
+    <string name="tab_text_1">Attendance</string>
+    <string name="tab_text_2">Udhariyaan</string>
 
     <string name="title_activity_tabbed">TabbedActivity</string>
     <string name="password">Password</string>

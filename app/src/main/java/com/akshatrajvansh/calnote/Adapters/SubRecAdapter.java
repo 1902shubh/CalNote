@@ -1,7 +1,6 @@
 package com.akshatrajvansh.calnote.Adapters;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -141,7 +140,7 @@ public class SubRecAdapter extends RecyclerView.Adapter<SubRecAdapter.ViewHolder
         user.put("Bunked", bunked);
         // Add a new document with a generated ID
         Log.d("DEBX", googleSignIn.getId());
-        firebaseFirestore.collection("Users").document("110636711971650532977").collection("Attendance").document(subjectCode)
+        firebaseFirestore.collection("Users").document(googleSignIn.getId()).collection("Attendance").document(subjectCode)
                 .set(user)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override

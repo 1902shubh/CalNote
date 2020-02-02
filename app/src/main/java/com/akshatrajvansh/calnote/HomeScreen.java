@@ -1,5 +1,6 @@
 package com.akshatrajvansh.calnote;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -9,8 +10,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -21,12 +20,14 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.akshatrajvansh.calnote.Adapters.LockableViewPager;
 import com.akshatrajvansh.calnote.Adapters.SubRecAdapter;
 import com.akshatrajvansh.calnote.Adapters.SwipeToDeleteCallback;
 import com.bumptech.glide.Glide;
@@ -61,26 +62,32 @@ public class HomeScreen extends AppCompatActivity implements NavigationView.OnNa
     private GoogleSignInClient client;
     private Button showDrawer;
     private GoogleSignInOptions gso;
-    RecyclerView recyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private LockableViewPager viewPager;
     private RecyclerView.LayoutManager layoutManager;
     private FloatingActionButton addSubjects;
-    private EditText subjectName, subjectCode, subjectAtt, subjectBun;
-    private String subName, subCode, subAtt, subBun;
-    private TextView userName, userEmailID;
-    private CircularImageView userProfilePic;
-    private ActionBarDrawerToggle toggle;
     private ArrayList<String> SubjectCode = new ArrayList<String>();
     private ArrayList<String> AttendedClasses = new ArrayList<String>();
     private ArrayList<String> BunkedClasses = new ArrayList<String>();
     private ArrayList<String> SubjectName = new ArrayList<String>();
+    private EditText subjectName, subjectCode, subjectAtt, subjectBun;
+    private String subName, subCode, subAtt, subBun;
+    RecyclerView recyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private ConstraintLayout AttendanceScreen, UdhariyaanScreen;
+
+    private TextView userName, userEmailID;
+    private CircularImageView userProfilePic;
+    private ActionBarDrawerToggle toggle;
+
     private DrawerLayout drawer;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_screen_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        firebaseFirestore = FirebaseFirestore.getInstance();
         googleSignIn = GoogleSignIn.getLastSignedInAccount(this);
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -89,6 +96,8 @@ public class HomeScreen extends AppCompatActivity implements NavigationView.OnNa
         setSupportActionBar(toolbar);
         drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+        AttendanceScreen = findViewById(R.id.attendance_screen);
+        UdhariyaanScreen = findViewById(R.id.udhariyaan_screen);
         View headerView = navigationView.getHeaderView(0);
 
         //Navigation Header will try to access data from the Google Account
@@ -112,15 +121,17 @@ public class HomeScreen extends AppCompatActivity implements NavigationView.OnNa
         navigationView.setNavigationItemSelectedListener(this);
         //sets the default opening screen of attendance in home screen
         navigationView.setCheckedItem(R.id.nav_attendance);
-        firebaseFirestore = FirebaseFirestore.getInstance();
         recyclerView = findViewById(R.id.recycler_view);
         addSubjects = findViewById(R.id.add_subjects);
         addSubjects.setOnClickListener(this);
-        showDrawer.setOnClickListener(this);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+        firebaseFirestore = FirebaseFirestore.getInstance();
         DataItems();
+
+        showDrawer.setOnClickListener(this);
+
     }
 
     public void addSubjectsPrompt() {
@@ -204,7 +215,7 @@ public class HomeScreen extends AppCompatActivity implements NavigationView.OnNa
                             mAdapter = new SubRecAdapter(HomeScreen.this, SubjectCode, SubjectName, AttendedClasses, BunkedClasses);
                             recyclerView.setAdapter(mAdapter);
                             ItemTouchHelper itemTouchHelper = new
-                                    ItemTouchHelper(new SwipeToDeleteCallback((SubRecAdapter)mAdapter));
+                                    ItemTouchHelper(new SwipeToDeleteCallback((SubRecAdapter) mAdapter));
                             itemTouchHelper.attachToRecyclerView(recyclerView);
                         }
                     }
@@ -222,6 +233,7 @@ public class HomeScreen extends AppCompatActivity implements NavigationView.OnNa
         BunkedClasses.clear();
     }
 
+
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -230,11 +242,13 @@ public class HomeScreen extends AppCompatActivity implements NavigationView.OnNa
         if (id == R.id.nav_profile) {
             Toast.makeText(HomeScreen.this, "Profile Button Clicked", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_attendance) {
-            Toast.makeText(HomeScreen.this, "All Subjects Button Clicked", Toast.LENGTH_SHORT).show();
-
+            Toast.makeText(HomeScreen.this, "Attendance Button Clicked", Toast.LENGTH_SHORT).show();
+            AttendanceScreen.setVisibility(View.VISIBLE);
+            UdhariyaanScreen.setVisibility(View.GONE);
         } else if (id == R.id.nav_udhariyaan) {
             Toast.makeText(HomeScreen.this, "Udhariyaan Button Clicked", Toast.LENGTH_SHORT).show();
-
+            AttendanceScreen.setVisibility(View.GONE);
+            UdhariyaanScreen.setVisibility(View.VISIBLE);
         } else if (id == R.id.nav_introduction) {
             Toast.makeText(this, "Introduction Clicked", Toast.LENGTH_SHORT).show();
 
