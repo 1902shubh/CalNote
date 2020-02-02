@@ -1,0 +1,85 @@
+{
+  "project_info": {
+    "project_number": "902162106293",
+    "firebase_url": "https://calnote-b55c7.firebaseio.com",
+    "project_id": "calnote-b55c7",
+    "storage_bucket": "calnote-b55c7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:902162106293:android:5b862ef1f00665d9dcfbfc",
+        "android_client_info": {
+          "package_name": "com.akshatrajvansh.calnote"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "902162106293-p26q8ks02m46umvgemu22lc67iabs62m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.akshatrajvansh.calnote",
+            "certificate_hash": "becbe40bb8731d71bc8be095ef40866b68fb416f"
+          }
+        },
+        {
+          "client_id": "902162106293-qut2tamjgfgbrppk23pnmcrbhdslplc7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBz2QE-sGEegS-u7nw5Av9CBXqxASbAKQU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "902162106293-qut2tamjgfgbrppk23pnmcrbhdslplc7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:902162106293:android:b5c58d72e1ddb8badcfbfc",
+        "android_client_info": {
+          "package_name": "com.android.college"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "902162106293-jukneuru2mkolrposja8n5tbp94jruim.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.android.college",
+            "certificate_hash": "becbe40bb8731d71bc8be095ef40866b68fb416f"
+          }
+        },
+        {
+          "client_id": "902162106293-qut2tamjgfgbrppk23pnmcrbhdslplc7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBz2QE-sGEegS-u7nw5Av9CBXqxASbAKQU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "902162106293-qut2tamjgfgbrppk23pnmcrbhdslplc7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
