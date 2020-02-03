@@ -32,7 +32,7 @@ public class SubRecAdapter extends RecyclerView.Adapter<SubRecAdapter.ViewHolder
     private ArrayList<String> SubjectName;
     private ArrayList<String> AttendedClasses;
     private ArrayList<String> BunkedClasses;
-    FirebaseFirestore firebaseFirestore;
+    private FirebaseFirestore firebaseFirestore;
     private Context mContext;
 
     public SubRecAdapter(Context context, ArrayList<String> subjectCode, ArrayList<String> subjectName, ArrayList<String> attendedClasses, ArrayList<String> bunkedClasses) {
@@ -129,10 +129,11 @@ public class SubRecAdapter extends RecyclerView.Adapter<SubRecAdapter.ViewHolder
         return SubjectCode.size();
     }
 
-    public void deleteItem(int position) {
+    void deleteItem(int position) {
         Toast.makeText(mContext, "Deleted "+ SubjectCode.get(position), Toast.LENGTH_SHORT).show();
     }
-    public void UpdateFirestore(String subjectCode, String subjectName, String attended, String bunked) {
+
+    private void UpdateFirestore(String subjectCode, String subjectName, String attended, String bunked) {
         Map<String, Object> user = new HashMap<>();
         user.put("Subject Name", subjectName);
         user.put("Subject Code", subjectCode);

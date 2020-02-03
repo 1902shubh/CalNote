@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +28,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.akshatrajvansh.calnote.Adapters.LoanRecAdapter;
 import com.akshatrajvansh.calnote.Adapters.LockableViewPager;
 import com.akshatrajvansh.calnote.Adapters.SubRecAdapter;
 import com.akshatrajvansh.calnote.Adapters.SwipeToDeleteCallback;
@@ -62,17 +64,21 @@ public class HomeScreen extends AppCompatActivity implements NavigationView.OnNa
     private GoogleSignInClient client;
     private Button showDrawer;
     private GoogleSignInOptions gso;
-    private LockableViewPager viewPager;
     private RecyclerView.LayoutManager layoutManager;
-    private FloatingActionButton addSubjects;
+    private RecyclerView.LayoutManager layoutMan;
+    private FloatingActionButton addSubjects, addDebt;
     private ArrayList<String> SubjectCode = new ArrayList<String>();
     private ArrayList<String> AttendedClasses = new ArrayList<String>();
     private ArrayList<String> BunkedClasses = new ArrayList<String>();
     private ArrayList<String> SubjectName = new ArrayList<String>();
-    private EditText subjectName, subjectCode, subjectAtt, subjectBun;
-    private String subName, subCode, subAtt, subBun;
-    RecyclerView recyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private ArrayList<String> DebtNames = new ArrayList<String>();
+    private ArrayList<String> DebtAmounts = new ArrayList<String>();
+    private ArrayList<String> DebtAction = new ArrayList<String>();
+    private EditText subjectName, subjectCode, subjectAtt, subjectBun, loanName, loanAmount;
+    private RadioButton pay, get;
+    private String subName, subCode, subAtt, subBun, debtName, debtAmount, debtAction;
+    RecyclerView recyclerView, loanRecView;
+    private RecyclerView.Adapter mAdapter, loanAdapter;
     private ConstraintLayout AttendanceScreen, UdhariyaanScreen;
 
     private TextView userName, userEmailID;
@@ -122,16 +128,112 @@ public class HomeScreen extends AppCompatActivity implements NavigationView.OnNa
         //sets the default opening screen of attendance in home screen
         navigationView.setCheckedItem(R.id.nav_attendance);
         recyclerView = findViewById(R.id.recycler_view);
+        loanRecView = findViewById(R.id.recycler_view_udhari);
         addSubjects = findViewById(R.id.add_subjects);
+        addDebt = findViewById(R.id.add_new_debt);
+        addDebt.setOnClickListener(this);
         addSubjects.setOnClickListener(this);
         recyclerView.setHasFixedSize(true);
+        loanRecView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
+        layoutMan = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+        loanRecView.setLayoutManager(layoutMan);
         firebaseFirestore = FirebaseFirestore.getInstance();
         DataItems();
-
+        debtKeeper();
         showDrawer.setOnClickListener(this);
 
+    }
+
+    public void addDebtPrompt() {
+        LayoutInflater layoutInflater = LayoutInflater.from(HomeScreen.this);
+        View promptsView = layoutInflater.inflate(R.layout.debt_adding_prompt, null);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(HomeScreen.this);
+        alertDialogBuilder.setView(promptsView);
+        loanName = (EditText) promptsView.findViewById(R.id.person_name);
+        loanAmount = (EditText) promptsView.findViewById(R.id.amount_of_money);
+        pay = (RadioButton) promptsView.findViewById(R.id.radio_to_pay);
+        get = (RadioButton) promptsView.findViewById(R.id.radio_to_get);
+        alertDialogBuilder.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                debtName = loanName.getText().toString();
+                debtAmount = loanAmount.getText().toString();
+                if (pay.isChecked()) {
+                    get.setChecked(false);
+                    debtAction = "pay";
+                } else if (get.isChecked()) {
+                    pay.setChecked(false);
+                    debtAction = "get";
+                }
+                addNewLoan(debtName, debtAmount, debtAction);
+            }
+        })
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
+    private void addNewLoan(String debtName, String debtAmount, String debtAction) {
+        Map<String, Object> debtDetails = new HashMap<>();
+        debtDetails.put("Person Name", debtName);
+        debtDetails.put("Amount", "Rs. "+debtAmount);
+        debtDetails.put("Action", debtAction);
+        // Add a new document with a generated ID
+        firebaseFirestore.collection("Users").document(googleSignIn.getId()).collection("Udhariyaan").document(debtName)
+                .set(debtDetails)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("FireStore", "DocumentSnapshot successfully written!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("FireStore", "Error writing document", e);
+                    }
+                });
+        debtKeeper();
+    }
+
+    private void debtKeeper() {
+        CollectionReference collectionReference = firebaseFirestore.collection("Users")
+                .document(googleSignIn.getId()).collection("Udhariyaan");
+        collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.w("Firestore", "Listen failed.", e);
+                    return;
+                }
+
+                if (queryDocumentSnapshots != null) {
+                    clearDebt();
+                    Log.d("Firestore", "Current data: " + queryDocumentSnapshots.getDocuments());
+                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        if (queryDocumentSnapshots.isEmpty()) {
+                            Log.d("TAG", "onSuccess: LIST EMPTY");
+
+                        } else {
+                            Log.d("Debt", documentSnapshot.toString());
+                            DebtNames.add(documentSnapshot.getString("Person Name"));
+                            DebtAmounts.add(documentSnapshot.getString("Amount"));
+                            DebtAction.add(documentSnapshot.getString("Action"));
+                            loanAdapter = new LoanRecAdapter(HomeScreen.this, DebtNames, DebtAmounts, DebtAction);
+                            loanRecView.setAdapter(loanAdapter);
+                        }
+                    }
+                } else {
+                    Log.d("Firestore", "Current data: null");
+                }
+            }
+        });
     }
 
     public void addSubjectsPrompt() {
@@ -198,7 +300,7 @@ public class HomeScreen extends AppCompatActivity implements NavigationView.OnNa
                 }
 
                 if (queryDocumentSnapshots != null) {
-                    clear();
+                    clearAttendance();
                     Log.d("Firestore", "Current data: " + queryDocumentSnapshots.getDocuments());
                     for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                         if (queryDocumentSnapshots.isEmpty()) {
@@ -226,13 +328,18 @@ public class HomeScreen extends AppCompatActivity implements NavigationView.OnNa
         });
     }
 
-    public void clear() {
+    public void clearAttendance() {
         SubjectCode.clear();
         SubjectName.clear();
         AttendedClasses.clear();
         BunkedClasses.clear();
     }
 
+    private void clearDebt(){
+        DebtAction.clear();
+        DebtAmounts.clear();
+        DebtNames.clear();
+    }
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -274,6 +381,9 @@ public class HomeScreen extends AppCompatActivity implements NavigationView.OnNa
         switch (v.getId()) {
             case R.id.add_subjects:
                 addSubjectsPrompt();
+                break;
+            case R.id.add_new_debt:
+                addDebtPrompt();
                 break;
             case R.id.more_button:
                 drawer.openDrawer(Gravity.LEFT);
