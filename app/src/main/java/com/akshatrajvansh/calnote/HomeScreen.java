@@ -7,12 +7,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,65 +19,38 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.akshatrajvansh.calnote.Adapters.LoanRecAdapter;
 import com.akshatrajvansh.calnote.Adapters.LockableViewPager;
-import com.akshatrajvansh.calnote.Adapters.SubRecAdapter;
-import com.akshatrajvansh.calnote.Adapters.SwipeToDeleteCallback;
+import com.akshatrajvansh.calnote.Adapters.SectionsPagerAdapter;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Nullable;
+import org.json.JSONObject;
 
 public class HomeScreen extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
-    private FirebaseFirestore firebaseFirestore;
     private GoogleSignInAccount googleSignIn;
     private GoogleSignInClient client;
     private Button showDrawer;
     private GoogleSignInOptions gso;
-    private RecyclerView.LayoutManager layoutManager;
-    private RecyclerView.LayoutManager layoutMan;
-    private FloatingActionButton addSubjects, addDebt;
-    private ArrayList<String> SubjectCode = new ArrayList<String>();
-    private ArrayList<String> AttendedClasses = new ArrayList<String>();
-    private ArrayList<String> BunkedClasses = new ArrayList<String>();
-    private ArrayList<String> SubjectName = new ArrayList<String>();
-    private ArrayList<String> DebtNames = new ArrayList<String>();
-    private ArrayList<String> DebtAmounts = new ArrayList<String>();
-    private ArrayList<String> DebtAction = new ArrayList<String>();
-    private EditText subjectName, subjectCode, subjectAtt, subjectBun, loanName, loanAmount;
-    private RadioButton pay, get;
-    private String subName, subCode, subAtt, subBun, debtName, debtAmount, debtAction;
-    RecyclerView recyclerView, loanRecView;
-    private RecyclerView.Adapter mAdapter, loanAdapter;
-    private ConstraintLayout AttendanceScreen, UdhariyaanScreen;
+    private SectionsPagerAdapter sectionsPagerAdapter;
+    private LockableViewPager viewPager;
 
     private TextView userName, userEmailID;
     private CircularImageView userProfilePic;
@@ -93,7 +64,6 @@ public class HomeScreen extends AppCompatActivity implements NavigationView.OnNa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_screen_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
-        firebaseFirestore = FirebaseFirestore.getInstance();
         googleSignIn = GoogleSignIn.getLastSignedInAccount(this);
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -102,8 +72,7 @@ public class HomeScreen extends AppCompatActivity implements NavigationView.OnNa
         setSupportActionBar(toolbar);
         drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
-        AttendanceScreen = findViewById(R.id.attendance_screen);
-        UdhariyaanScreen = findViewById(R.id.udhariyaan_screen);
+
         View headerView = navigationView.getHeaderView(0);
 
         //Navigation Header will try to access data from the Google Account
@@ -127,219 +96,19 @@ public class HomeScreen extends AppCompatActivity implements NavigationView.OnNa
         navigationView.setNavigationItemSelectedListener(this);
         //sets the default opening screen of attendance in home screen
         navigationView.setCheckedItem(R.id.nav_attendance);
-        recyclerView = findViewById(R.id.recycler_view);
-        loanRecView = findViewById(R.id.recycler_view_udhari);
-        addSubjects = findViewById(R.id.add_subjects);
-        addDebt = findViewById(R.id.add_new_debt);
-        addDebt.setOnClickListener(this);
-        addSubjects.setOnClickListener(this);
-        recyclerView.setHasFixedSize(true);
-        loanRecView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(this);
-        layoutMan = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        loanRecView.setLayoutManager(layoutMan);
-        firebaseFirestore = FirebaseFirestore.getInstance();
-        DataItems();
-        debtKeeper();
+        sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
+        viewPager = findViewById(R.id.lockableViewPager);
+        viewPager.setSwipeable(false);
+        viewPager.setAdapter(sectionsPagerAdapter);
+        viewPager.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
         showDrawer.setOnClickListener(this);
-
     }
 
-    public void addDebtPrompt() {
-        LayoutInflater layoutInflater = LayoutInflater.from(HomeScreen.this);
-        View promptsView = layoutInflater.inflate(R.layout.debt_adding_prompt, null);
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(HomeScreen.this);
-        alertDialogBuilder.setView(promptsView);
-        loanName = (EditText) promptsView.findViewById(R.id.person_name);
-        loanAmount = (EditText) promptsView.findViewById(R.id.amount_of_money);
-        pay = (RadioButton) promptsView.findViewById(R.id.radio_to_pay);
-        get = (RadioButton) promptsView.findViewById(R.id.radio_to_get);
-        alertDialogBuilder.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                debtName = loanName.getText().toString();
-                debtAmount = loanAmount.getText().toString();
-                if (pay.isChecked()) {
-                    get.setChecked(false);
-                    debtAction = "pay";
-                } else if (get.isChecked()) {
-                    pay.setChecked(false);
-                    debtAction = "get";
-                }
-                addNewLoan(debtName, debtAmount, debtAction);
-            }
-        })
-                .setNegativeButton("Cancel",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
-    }
-
-    private void addNewLoan(String debtName, String debtAmount, String debtAction) {
-        Map<String, Object> debtDetails = new HashMap<>();
-        debtDetails.put("Person Name", debtName);
-        debtDetails.put("Amount", "Rs. "+debtAmount);
-        debtDetails.put("Action", debtAction);
-        // Add a new document with a generated ID
-        firebaseFirestore.collection("Users").document(googleSignIn.getId()).collection("Udhariyaan").document(debtName)
-                .set(debtDetails)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d("FireStore", "DocumentSnapshot successfully written!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("FireStore", "Error writing document", e);
-                    }
-                });
-        debtKeeper();
-    }
-
-    private void debtKeeper() {
-        CollectionReference collectionReference = firebaseFirestore.collection("Users")
-                .document(googleSignIn.getId()).collection("Udhariyaan");
-        collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                if (e != null) {
-                    Log.w("Firestore", "Listen failed.", e);
-                    return;
-                }
-
-                if (queryDocumentSnapshots != null) {
-                    clearDebt();
-                    Log.d("Firestore", "Current data: " + queryDocumentSnapshots.getDocuments());
-                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                        if (queryDocumentSnapshots.isEmpty()) {
-                            Log.d("TAG", "onSuccess: LIST EMPTY");
-
-                        } else {
-                            Log.d("Debt", documentSnapshot.toString());
-                            DebtNames.add(documentSnapshot.getString("Person Name"));
-                            DebtAmounts.add(documentSnapshot.getString("Amount"));
-                            DebtAction.add(documentSnapshot.getString("Action"));
-                            loanAdapter = new LoanRecAdapter(HomeScreen.this, DebtNames, DebtAmounts, DebtAction);
-                            loanRecView.setAdapter(loanAdapter);
-                        }
-                    }
-                } else {
-                    Log.d("Firestore", "Current data: null");
-                }
-            }
-        });
-    }
-
-    public void addSubjectsPrompt() {
-        LayoutInflater layoutInflater = LayoutInflater.from(HomeScreen.this);
-        View promptsView = layoutInflater.inflate(R.layout.subject_adding_prompt, null);
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(HomeScreen.this);
-        alertDialogBuilder.setView(promptsView);
-        subjectName = (EditText) promptsView.findViewById(R.id.subject_name);
-        subjectCode = (EditText) promptsView.findViewById(R.id.subject_code);
-        subjectAtt = (EditText) promptsView.findViewById(R.id.subject_att);
-        subjectBun = (EditText) promptsView.findViewById(R.id.subject_bun);
-        alertDialogBuilder.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                subName = subjectName.getText().toString();
-                subCode = subjectCode.getText().toString();
-                subAtt = subjectAtt.getText().toString();
-                subBun = subjectBun.getText().toString();
-                addNewSubject(subCode, subName, subAtt, subBun);
-            }
-        })
-                .setNegativeButton("Cancel",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
-    }
-
-    public void addNewSubject(String code, String name, String att, String bun) {
-        Map<String, Object> subjectDetails = new HashMap<>();
-        subjectDetails.put("Subject Name", name);
-        subjectDetails.put("Subject Code", code);
-        subjectDetails.put("Attended", att);
-        subjectDetails.put("Bunked", bun);
-        // Add a new document with a generated ID
-        firebaseFirestore.collection("Users").document(googleSignIn.getId()).collection("Attendance").document(code)
-                .set(subjectDetails)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d("FireStore", "DocumentSnapshot successfully written!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("FireStore", "Error writing document", e);
-                    }
-                });
-        DataItems();
-    }
-
-    public void DataItems() {
-        CollectionReference collectionReference = firebaseFirestore.collection("Users")
-                .document(googleSignIn.getId()).collection("Attendance");
-        collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                if (e != null) {
-                    Log.w("Firestore", "Listen failed.", e);
-                    return;
-                }
-
-                if (queryDocumentSnapshots != null) {
-                    clearAttendance();
-                    Log.d("Firestore", "Current data: " + queryDocumentSnapshots.getDocuments());
-                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                        if (queryDocumentSnapshots.isEmpty()) {
-                            Log.d("TAG", "onSuccess: LIST EMPTY");
-
-                        } else {
-
-                            SubjectName.add(documentSnapshot.getString("Subject Name"));
-                            SubjectCode.add(documentSnapshot.getString("Subject Code"));
-                            AttendedClasses.add(documentSnapshot.getString("Attended"));
-                            BunkedClasses.add(documentSnapshot.getString("Bunked"));
-                            Log.d("HomeScreen", documentSnapshot.getData().toString());
-                            Log.d("HomeScreen", documentSnapshot.getString("Attended"));
-                            mAdapter = new SubRecAdapter(HomeScreen.this, SubjectCode, SubjectName, AttendedClasses, BunkedClasses);
-                            recyclerView.setAdapter(mAdapter);
-                            ItemTouchHelper itemTouchHelper = new
-                                    ItemTouchHelper(new SwipeToDeleteCallback((SubRecAdapter) mAdapter));
-                            itemTouchHelper.attachToRecyclerView(recyclerView);
-                        }
-                    }
-                } else {
-                    Log.d("Firestore", "Current data: null");
-                }
-            }
-        });
-    }
-
-    public void clearAttendance() {
-        SubjectCode.clear();
-        SubjectName.clear();
-        AttendedClasses.clear();
-        BunkedClasses.clear();
-    }
-
-    private void clearDebt(){
-        DebtAction.clear();
-        DebtAmounts.clear();
-        DebtNames.clear();
-    }
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -350,12 +119,10 @@ public class HomeScreen extends AppCompatActivity implements NavigationView.OnNa
             Toast.makeText(HomeScreen.this, "Profile Button Clicked", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_attendance) {
             Toast.makeText(HomeScreen.this, "Attendance Button Clicked", Toast.LENGTH_SHORT).show();
-            AttendanceScreen.setVisibility(View.VISIBLE);
-            UdhariyaanScreen.setVisibility(View.GONE);
+            viewPager.setCurrentItem(0);
         } else if (id == R.id.nav_udhariyaan) {
             Toast.makeText(HomeScreen.this, "Udhariyaan Button Clicked", Toast.LENGTH_SHORT).show();
-            AttendanceScreen.setVisibility(View.GONE);
-            UdhariyaanScreen.setVisibility(View.VISIBLE);
+            viewPager.setCurrentItem(1);
         } else if (id == R.id.nav_introduction) {
             Toast.makeText(this, "Introduction Clicked", Toast.LENGTH_SHORT).show();
 
@@ -363,33 +130,59 @@ public class HomeScreen extends AppCompatActivity implements NavigationView.OnNa
             Toast.makeText(this, "Settings Clicked", Toast.LENGTH_SHORT).show();
 
         } else if (id == R.id.nav_logout) {
-            Toast.makeText(this, "Logging out", Toast.LENGTH_SHORT).show();
-            client.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> history) {
-                    startActivity(new Intent(HomeScreen.this, SplashScreen.class));
-                    finish();
-                }
-            });
+            new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert).setTitle("Log Out")
+                    .setMessage("Do you want to log out?")
+                    .setPositiveButton("yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            logOut();
+                        }
+                    }).setNegativeButton("no", null).show();
+
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
+    private void logOut() {
+        client.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> history) {
+                startActivity(new Intent(HomeScreen.this, SplashScreen.class));
+                finish();
+            }
+        });
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.add_subjects:
-                addSubjectsPrompt();
-                break;
-            case R.id.add_new_debt:
-                addDebtPrompt();
-                break;
             case R.id.more_button:
+                getDeveloperDetails();
                 drawer.openDrawer(Gravity.LEFT);
                 break;
         }
     }
+
+    private void getDeveloperDetails() {
+        String url = "https://us-central1-calnote-b55c7.cloudfunctions.net/getDeveloper";
+        RequestQueue queue = Volley.newRequestQueue(this);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Toast.makeText(HomeScreen.this, response, Toast.LENGTH_SHORT).show();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(HomeScreen.this, "That didn't work!", Toast.LENGTH_SHORT).show();
+            }
+        });
+        queue.add(stringRequest);
+
+    }
+
 
     @Override
     public void onBackPressed() {
