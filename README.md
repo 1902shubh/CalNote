@@ -1,2 +1,2 @@
-# Calnote
+# CalNote
 Modern Attendance Manager application
