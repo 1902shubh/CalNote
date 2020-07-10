@@ -72,8 +72,9 @@
             android:textSize="25sp" />
 
         <EditText
-            android:id="@+id/subject_att"
+            android:id="@+id/attendedClasses"
             android:layout_width="80dp"
+            android:inputType="text"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:fontFamily="@font/anaheim"
@@ -92,12 +93,13 @@
             android:textSize="25sp" />
 
         <EditText
-            android:id="@+id/subject_bun"
+            android:id="@+id/bunkedClasses"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:fontFamily="@font/anaheim"
             android:gravity="center"
+            android:inputType="text"
             android:textColor="@color/colorTextDialog"
             android:textSize="25sp">
 

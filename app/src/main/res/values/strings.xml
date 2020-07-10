@@ -7,20 +7,17 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
-    <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
-    <string name="menu_tools">Settings</string>
-    <string name="menu_share">Share</string>
-    <string name="menu_send">Send</string>
-
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_tabbed_activity">Weekly View</string>
     <string name="tab_text_1">Attendance</string>
     <string name="tab_text_2">Udhariyaan</string>
+    <string name="tab_text_3">Notes</string>
+    <string name="tab_text_4">Browser</string>
+    <string name="tab_text_5">Profile</string>
 
     <string name="title_activity_tabbed">TabbedActivity</string>
     <string name="password">Password</string>
     <string name="log_in">Log In</string>
+    <string name="profile_desc">A biography, or simply bio, is a detailed description of a person\'s life. It involves more than just the basic facts like education, work, relationships, and death; it portrays a person\'s experience of these life events. Unlike a profile or curriculum vitae (résumé), a biography presents a subject\'s life story, highlighting various aspects of his or her life, including intimate details of experience, and may include an analysis of the subject\'s personality. Biographical works are usually non-fiction, but fiction can also be used to portray a person\'s life. One in-depth form of biographical coverage is called legacy writing. Works in diverse media, from literature to film, form the genre known as biography. An authorized biography is written with the permission, cooperation, and at times, participation of a subject or a subject\'s heirs. An autobiography is written by the person himself or herself, sometimes with the assistance of a collaborator or ghostwriter.</string>
 </resources>

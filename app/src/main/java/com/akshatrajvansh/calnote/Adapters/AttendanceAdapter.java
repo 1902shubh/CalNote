@@ -12,34 +12,26 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
-
+import com.akshatrajvansh.calnote.Fragments.FragmentAttendance;
 import com.akshatrajvansh.calnote.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SubRecAdapter extends RecyclerView.Adapter<SubRecAdapter.ViewHolder> {
+public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.ViewHolder> {
 
-    private static final String TAG = "SubRecAdapter";
+    private static final String TAG = "AttendanceAdapter";
     private GoogleSignInAccount googleSignIn;
-    private ArrayList<String> SubjectCode;
-    private ArrayList<String> SubjectName;
-    private ArrayList<String> AttendedClasses;
-    private ArrayList<String> BunkedClasses;
     private FirebaseFirestore firebaseFirestore;
     private Context mContext;
 
-    public SubRecAdapter(Context context, ArrayList<String> subjectCode, ArrayList<String> subjectName, ArrayList<String> attendedClasses, ArrayList<String> bunkedClasses) {
-        SubjectCode = subjectCode;
-        SubjectName = subjectName;
-        AttendedClasses = attendedClasses;
-        BunkedClasses = bunkedClasses;
+    public AttendanceAdapter(Context context) {
         mContext = context;
         googleSignIn = GoogleSignIn.getLastSignedInAccount(context);
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -56,69 +48,72 @@ public class SubRecAdapter extends RecyclerView.Adapter<SubRecAdapter.ViewHolder
     public void onBindViewHolder(ViewHolder holder, final int position) {
         Log.d(TAG, "onBindViewHolder: called.");
         //if (SubjectCode.get(position) != null && !SubjectCode.get(position).contains("CODE")) {
-            holder.subjectCode.setText(SubjectCode.get(position));
-            holder.attendance.setText(getAttendance(AttendedClasses.get(position), BunkedClasses.get(position)));
-            holder.warning.setText(getWarning(AttendedClasses.get(position), BunkedClasses.get(position)));
+        try {
+            holder.subjectCode.setText(FragmentAttendance.SubjectCode.get(position));
+            holder.attendance.setText(getAttendance(FragmentAttendance.AttendedClasses.get(position), FragmentAttendance.BunkedClasses.get(position)));
+            holder.warning.setText(getWarning(FragmentAttendance.AttendedClasses.get(position), FragmentAttendance.BunkedClasses.get(position)));
 
             holder.cardViewLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Log.d(TAG, "onClick: clicked on: " + SubjectCode.get(position));
-                    Toast.makeText(mContext, SubjectCode.get(position), Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "onClick: clicked on: " + FragmentAttendance.SubjectCode.get(position));
+                    Toast.makeText(mContext, FragmentAttendance.SubjectCode.get(position), Toast.LENGTH_SHORT).show();
                 }
             });
 
-            holder.attended.setOnClickListener(new View.OnClickListener() {
+            holder.AttendedClasses.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    UpdateFirestore(SubjectCode.get(position), SubjectName.get(position), String.valueOf(Integer.valueOf(AttendedClasses.get(position)) + 1), BunkedClasses.get(position));
+                    FragmentAttendance.AttendedClasses.set(position, String.valueOf(Integer.parseInt(FragmentAttendance.AttendedClasses.get(position)) + 1));
+                    UpdateCloud();
                 }
             });
 
-            holder.bunked.setOnClickListener(new View.OnClickListener() {
+            holder.BunkedClasses.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    UpdateFirestore(SubjectCode.get(position), SubjectName.get(position), AttendedClasses.get(position), String.valueOf(Integer.valueOf(BunkedClasses.get(position)) + 1));
+                    FragmentAttendance.BunkedClasses.set(position, String.valueOf(Integer.parseInt(FragmentAttendance.BunkedClasses.get(position)) + 1));
+                    UpdateCloud();
                 }
             });
 
             holder.subjectCode.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(mContext, SubjectName.get(position), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, FragmentAttendance.SubjectName.get(position), Toast.LENGTH_SHORT).show();
                 }
             });
 
             holder.attendance.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(mContext, getPercent(AttendedClasses.get(position), BunkedClasses.get(position)), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, getPercent(FragmentAttendance.AttendedClasses.get(position), FragmentAttendance.BunkedClasses.get(position)), Toast.LENGTH_SHORT).show();
                 }
             });
-       // }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public String getAttendance(String attended, String bunked) {
-        return Integer.valueOf(attended) + "/" + (Integer.valueOf(attended) + Integer.valueOf(bunked));
+    public String getAttendance(String AttendedClasses, String BunkedClasses) {
+        return Integer.valueOf(AttendedClasses) + "/" + (Integer.parseInt(AttendedClasses) + Integer.parseInt(BunkedClasses));
     }
 
-    public String getWarning(String attended, String bunked) {
-        int att = Integer.valueOf(attended);
-        int bun = Integer.valueOf(bunked);
+    public String getWarning(String AttendedClasses, String BunkedClasses) {
+        int att = Integer.parseInt(AttendedClasses);
+        int bun = Integer.parseInt(BunkedClasses);
         int total = att + bun;
         int percent = (att * 100) / total;
         if (percent >= 80)
             return "Good Relief";
-        else if (percent < 80 && percent >= 75)
+        else if (percent >= 75)
             return "Watch Out!";
-        else if (percent < 75)
-            return "Good Grief";
-        return "Yet to attend?!";
+        else return "Good Grief";
     }
 
-    public String getPercent(String attended, String bunked) {
-        int att = Integer.valueOf(attended);
-        int bun = Integer.valueOf(bunked);
+    public String getPercent(String AttendedClasses, String BunkedClasses) {
+        int att = Integer.parseInt(AttendedClasses);
+        int bun = Integer.parseInt(BunkedClasses);
         int total = att + bun;
         int percent = (att * 100) / total;
         return percent + "%";
@@ -126,23 +121,30 @@ public class SubRecAdapter extends RecyclerView.Adapter<SubRecAdapter.ViewHolder
 
     @Override
     public int getItemCount() {
-        return SubjectCode.size();
+        return FragmentAttendance.SubjectCode.size();
     }
 
     void deleteItem(int position) {
-        Toast.makeText(mContext, "Deleted "+ SubjectCode.get(position), Toast.LENGTH_SHORT).show();
+        Toast.makeText(mContext, "Deleting " + FragmentAttendance.SubjectCode.get(position), Toast.LENGTH_SHORT).show();
+        FragmentAttendance.SubjectCode.remove(position);
+            FragmentAttendance.AttendedClasses.remove(position);
+            FragmentAttendance.BunkedClasses.remove(position);
+        FragmentAttendance.SubjectName.remove(position);
+        FragmentAttendance.attendanceAdapter.notifyDataSetChanged();
+        UpdateCloud();
     }
 
-    private void UpdateFirestore(String subjectCode, String subjectName, String attended, String bunked) {
+    private void UpdateCloud() {
+        FragmentAttendance.attendanceAdapter.notifyDataSetChanged();
         Map<String, Object> user = new HashMap<>();
-        user.put("Subject Name", subjectName);
-        user.put("Subject Code", subjectCode);
-        user.put("Attended", attended);
-        user.put("Bunked", bunked);
+        user.put("Subject Name", FragmentAttendance.SubjectName);
+        user.put("Subject Code", FragmentAttendance.SubjectCode);
+        user.put("Attended Classes", FragmentAttendance.AttendedClasses);
+        user.put("Bunked Classes", FragmentAttendance.BunkedClasses);
         // Add a new document with a generated ID
         Log.d("DEBX", googleSignIn.getId());
-        firebaseFirestore.collection("Users").document(googleSignIn.getId()).collection("Attendance").document(subjectCode)
-                .set(user)
+        firebaseFirestore.collection("Users").document(googleSignIn.getId()).collection("Attendance").document(googleSignIn.getId())
+                .set(user, SetOptions.merge())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -162,15 +164,15 @@ public class SubRecAdapter extends RecyclerView.Adapter<SubRecAdapter.ViewHolder
         TextView subjectCode;
         TextView warning;
         TextView attendance;
-        Button attended, bunked;
+        Button AttendedClasses, BunkedClasses;
         CardView cardViewLayout;
 
         public ViewHolder(View itemView) {
             super(itemView);
             cardViewLayout = itemView.findViewById(R.id.subject_cardview);
             subjectCode = itemView.findViewById(R.id.subcode);
-            attended = itemView.findViewById(R.id.attended);
-            bunked = itemView.findViewById(R.id.bunked);
+            AttendedClasses = itemView.findViewById(R.id.attended);
+            BunkedClasses = itemView.findViewById(R.id.bunked);
             warning = itemView.findViewById(R.id.warnings);
             attendance = itemView.findViewById(R.id.class_attended);
         }

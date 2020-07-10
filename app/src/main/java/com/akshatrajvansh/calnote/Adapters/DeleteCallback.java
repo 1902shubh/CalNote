@@ -6,10 +6,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
-    private SubRecAdapter mAdapter;
+public class DeleteCallback extends ItemTouchHelper.SimpleCallback {
+    private AttendanceAdapter mAdapter;
 
-    public SwipeToDeleteCallback(SubRecAdapter adapter) {
+    public DeleteCallback(AttendanceAdapter adapter) {
         super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
         mAdapter = adapter;
     }

@@ -29,6 +29,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -117,7 +118,7 @@ public class FragmentUdhari extends Fragment {
         debtDetails.put("Action", debtAction);
         // Add a new document with a generated ID
         firebaseFirestore.collection("Users").document(googleSignIn.getId()).collection("Udhariyaan").document(debtName)
-                .set(debtDetails)
+                .set(debtDetails, SetOptions.merge())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

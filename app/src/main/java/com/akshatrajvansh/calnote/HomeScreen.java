@@ -117,13 +117,20 @@ public class HomeScreen extends AppCompatActivity implements NavigationView.OnNa
         //(findViewById(R.id.nav_all_subjects)).setClickable(false);
         if (id == R.id.nav_profile) {
             Toast.makeText(HomeScreen.this, "Profile Button Clicked", Toast.LENGTH_SHORT).show();
+            viewPager.setCurrentItem(4);
         } else if (id == R.id.nav_attendance) {
             Toast.makeText(HomeScreen.this, "Attendance Button Clicked", Toast.LENGTH_SHORT).show();
             viewPager.setCurrentItem(0);
         } else if (id == R.id.nav_udhariyaan) {
             Toast.makeText(HomeScreen.this, "Udhariyaan Button Clicked", Toast.LENGTH_SHORT).show();
             viewPager.setCurrentItem(1);
-        } else if (id == R.id.nav_introduction) {
+        } else if (id == R.id.nav_notes) {
+            Toast.makeText(HomeScreen.this, "Notes Button Clicked", Toast.LENGTH_SHORT).show();
+            viewPager.setCurrentItem(2);
+        } else if (id == R.id.nav_browser) {
+            Toast.makeText(HomeScreen.this, "WebBrowser Button Clicked", Toast.LENGTH_SHORT).show();
+            viewPager.setCurrentItem(3);
+        }else if (id == R.id.nav_introduction) {
             Toast.makeText(this, "Introduction Clicked", Toast.LENGTH_SHORT).show();
 
         } else if (id == R.id.nav_settings) {

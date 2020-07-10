@@ -8,6 +8,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.akshatrajvansh.calnote.Fragments.FragmentAttendance;
+import com.akshatrajvansh.calnote.Fragments.FragmentBrowser;
+import com.akshatrajvansh.calnote.Fragments.FragmentNotes;
+import com.akshatrajvansh.calnote.Fragments.FragmentProfile;
 import com.akshatrajvansh.calnote.Fragments.FragmentUdhari;
 import com.akshatrajvansh.calnote.R;
 
@@ -15,7 +18,7 @@ import com.akshatrajvansh.calnote.R;
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @StringRes
-    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2};
+    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2, R.string.tab_text_3, R.string.tab_text_4, R.string.tab_text_5};
     private final Context mContext;
 
     public SectionsPagerAdapter(Context context, FragmentManager fm) {
@@ -27,15 +30,17 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                FragmentAttendance fragmentAttendance = new FragmentAttendance();
-                return fragmentAttendance;
+                return new FragmentAttendance();
             case 1:
-                FragmentUdhari fragmentUdhari = new FragmentUdhari();
-                return fragmentUdhari;
-            default:
-                FragmentAttendance fragmentDefault = new FragmentAttendance();
-                return fragmentDefault;
+                return new FragmentUdhari();
+            case 2:
+                return new FragmentNotes();
+            case 3:
+                return new FragmentBrowser();
+            case 4:
+                return new FragmentProfile();
         }
+        return new FragmentAttendance();
     }
 
     @Nullable
@@ -46,7 +51,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        // Show 2 total pages.
-        return 2;
+        return 5;
     }
 }

@@ -19,8 +19,19 @@
             <item
                 android:id="@+id/nav_udhariyaan"
                 android:checkable="true"
-                android:icon="@drawable/ic_day_wise"
+                android:icon="@drawable/ic_money"
                 android:title="Udhariyaan" />
+
+            <item
+                android:id="@+id/nav_notes"
+                android:checkable="true"
+                android:icon="@drawable/ic_notes_40"
+                android:title="Notes" />
+            <item
+                android:id="@+id/nav_browser"
+                android:checkable="true"
+                android:icon="@drawable/ic_day_wise"
+                android:title="Browser" />
         </menu>
     </item>
     <item android:title="Tools">
