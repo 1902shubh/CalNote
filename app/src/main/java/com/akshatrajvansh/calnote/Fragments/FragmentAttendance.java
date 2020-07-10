@@ -1,6 +1,9 @@
 package com.akshatrajvansh.calnote.Fragments;
 
 import android.content.DialogInterface;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,10 +32,16 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
+import com.google.gson.Gson;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class FragmentAttendance extends Fragment {
     RecyclerView recyclerView;
@@ -46,6 +55,7 @@ public class FragmentAttendance extends Fragment {
     public static ArrayList<String> SubjectCode = new ArrayList<>();
     public static ArrayList<String> AttendedClasses = new ArrayList<>();
     public static ArrayList<String> BunkedClasses = new ArrayList<>();
+    SQLiteDatabase localStorage;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,6 +68,8 @@ public class FragmentAttendance extends Fragment {
         View view = inflater.inflate(R.layout.fragment_attendance, container, false);
         firebaseFirestore = FirebaseFirestore.getInstance();
         googleSignIn = GoogleSignIn.getLastSignedInAccount(getContext());
+        localStorage = getContext().openOrCreateDatabase("attendance", MODE_PRIVATE, null);
+        localStorage.execSQL("CREATE TABLE IF NOT EXISTS attendance (data VARCHAR)");
         recyclerView = view.findViewById(R.id.recycler_view);
         addNew = view.findViewById(R.id.add_subjects);
         attendanceAdapter = new AttendanceAdapter(getContext());
@@ -77,7 +89,62 @@ public class FragmentAttendance extends Fragment {
         return view;
     }
 
+    private void storeDataOffline() {
+        try {
+            JSONObject json = new JSONObject();
+            json.put("subjectName", new JSONArray(SubjectName));
+            json.put("subjectCode", new JSONArray(SubjectCode));
+            json.put("classesAttended", new JSONArray(AttendedClasses));
+            json.put("classesBunked", new JSONArray(BunkedClasses));
+            String stringJSON = json.toString();
+            Log.d("JSONFormat", stringJSON);
+            localStorage.execSQL("DELETE from notes");
+            String sql = "INSERT INTO notes (data) VALUES (?)";
+            localStorage.execSQL("CREATE TABLE IF NOT EXISTS notes (data VARCHAR)");
+            SQLiteStatement statement = localStorage.compileStatement(sql);
+            statement.bindString(1, stringJSON);
+            statement.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void retrieveDataOffline() {
+        try {
+            Cursor c = localStorage.rawQuery("SELECT * FROM attendance", null);
+            c.moveToFirst();
+            int dataIndex = c.getColumnIndex("data");
+            String result = c.getString(dataIndex);
+            c.close();
+            Log.d("JSONFormat", "Result: " + result);
+            Gson gson = new Gson();
+            String str = gson.toJson(result);
+            JSONObject jsonObject = new JSONObject(result);
+            Log.d("JSONFormat", "jsonObject: " + jsonObject);
+            JSONArray jsonSubjectName = jsonObject.getJSONArray("subjectName");
+            JSONArray jsonSubjectCode = jsonObject.getJSONArray("subjectCode");
+            JSONArray jsonAttendedClasses = jsonObject.getJSONArray("classesAttended");
+            JSONArray jsonBunkedClasses = jsonObject.getJSONArray("classesBunked");
+            SubjectName.clear();
+            SubjectCode.clear();
+            AttendedClasses.clear();
+            BunkedClasses.clear();
+            for (int i = 0; i < jsonSubjectName.length(); i++) {
+                SubjectName.add(jsonSubjectName.getString(i));
+                SubjectCode.add(jsonSubjectCode.getString(i));
+                AttendedClasses.add(jsonAttendedClasses.getString(i));
+                BunkedClasses.add(jsonBunkedClasses.getString(i));
+            }
+            Log.d("JSONFormat", "str: " + str);
+            attendanceAdapter.notifyDataSetChanged();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
     private void syncNotes() {
+        retrieveDataOffline();
         Log.i("Data Coming", "inside the function");
         DocumentReference documentReference = firebaseFirestore.collection("Users")
                 .document(googleSignIn.getId()).collection("Attendance").document(googleSignIn.getId());
@@ -91,6 +158,7 @@ public class FragmentAttendance extends Fragment {
                         SubjectCode = (ArrayList<String>) snapshot.getData().get("Subject Code");
                         AttendedClasses = (ArrayList<String>) snapshot.getData().get("Attended Classes");
                         BunkedClasses = (ArrayList<String>) snapshot.getData().get("Bunked Classes");
+                        storeDataOffline();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -138,6 +206,7 @@ public class FragmentAttendance extends Fragment {
     }
 
     public void saveNotes() {
+        storeDataOffline();
         Map<String, Object> Notes = new HashMap<>();
         Notes.put("Subject Name", SubjectName);
         Notes.put("Subject Code", SubjectCode);
@@ -162,6 +231,7 @@ public class FragmentAttendance extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        //storeDataOffline();
     }
 
 }

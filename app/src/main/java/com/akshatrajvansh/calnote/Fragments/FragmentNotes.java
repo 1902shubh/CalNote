@@ -2,7 +2,9 @@ package com.akshatrajvansh.calnote.Fragments;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,10 +18,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
-import com.akshatrajvansh.calnote.Adapters.LoanRecAdapter;
 import com.akshatrajvansh.calnote.Adapters.NotesAdapter;
 import com.akshatrajvansh.calnote.R;
-import com.facebook.share.Share;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -27,26 +27,22 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
+import com.google.gson.Gson;
 
-import java.lang.reflect.Array;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.zip.CheckedOutputStream;
 
-import javax.annotation.Nullable;
+import static android.content.Context.MODE_PRIVATE;
 
 public class FragmentNotes extends Fragment {
     ListView listView;
@@ -57,7 +53,7 @@ public class FragmentNotes extends Fragment {
     EditText newNoteTitle, newNoteContent;
     private FirebaseFirestore firebaseFirestore;
     private GoogleSignInAccount googleSignIn;
-    SharedPreferences sharedPreferences;
+    SQLiteDatabase localStorage;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,9 +61,20 @@ public class FragmentNotes extends Fragment {
     }
 
     @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notes, container, false);
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        googleSignIn = GoogleSignIn.getLastSignedInAccount(getContext());
+
+        localStorage = getContext().openOrCreateDatabase("notes", MODE_PRIVATE, null);
+        localStorage.execSQL("CREATE TABLE IF NOT EXISTS notes (data VARCHAR)");
+
         listView = view.findViewById(R.id.listView);
         addNewNote = view.findViewById(R.id.addNewNote);
         notesAdapter = new NotesAdapter(getContext(), titles, contents);
@@ -86,6 +93,54 @@ public class FragmentNotes extends Fragment {
             }
         });
         return view;
+    }
+
+    private void storeDataOffline() {
+        try {
+            Log.d("JSONFormat", "Titles: "+titles);
+            Log.d("JSONFormat", "Contents: "+contents);
+            JSONObject json = new JSONObject();
+            json.put("jsonTitles", new JSONArray(titles));
+            json.put("jsonContents", new JSONArray(contents));
+            String stringJSON = json.toString();
+            Log.d("JSONFormat", stringJSON);
+            localStorage.execSQL("DELETE from notes");
+            String sql = "INSERT INTO notes (data) VALUES (?)";
+            localStorage.execSQL("CREATE TABLE IF NOT EXISTS notes (data VARCHAR)");
+            SQLiteStatement statement = localStorage.compileStatement(sql);
+            statement.bindString(1, stringJSON);
+            statement.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void retrieveDataOffline() {
+        try {
+            Cursor c = localStorage.rawQuery("SELECT * FROM notes", null);
+            c.moveToFirst();
+            String result = c.getString(0);
+            c.close();
+            Log.d("JSONFormat", "Result: " + result);
+            Gson gson = new Gson();
+            String str = gson.toJson(result);
+            JSONObject jsonObject = new JSONObject(result);
+            Log.d("JSONFormat", "jsonObject: " + jsonObject);
+            JSONArray jsonTitle = jsonObject.getJSONArray("jsonTitles");
+            JSONArray jsonContents = jsonObject.getJSONArray("jsonContents");
+            titles.clear();
+            contents.clear();
+            for(int i=0; i<jsonTitle.length(); i++){
+                titles.add(jsonTitle.getString(i));
+                contents.add(jsonContents.getString(i));
+            }
+            Log.d("JSONFormat", "str: " + str);
+            Log.d("JSONFormat", "titles: " + titles);
+
+            notesAdapter.notifyDataSetChanged();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void deleteNote(int position) {
@@ -123,36 +178,6 @@ public class FragmentNotes extends Fragment {
         saveNotes();
     }
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        sharedPreferences = context.getSharedPreferences("com.akshatrajvansh.calnote.Notes", Context.MODE_PRIVATE);
-        firebaseFirestore = FirebaseFirestore.getInstance();
-        googleSignIn = GoogleSignIn.getLastSignedInAccount(context);
-        storeDataOffline();
-        getPreviousNotes();
-    }
-
-    private void storeDataOffline() {
-        HashSet<String> TitleSet = new HashSet<>(FragmentNotes.titles);
-        HashSet<String> ContentSet = new HashSet<>(FragmentNotes.contents);
-        sharedPreferences.edit().putStringSet("Title", TitleSet).apply();
-        sharedPreferences.edit().putStringSet("Content", ContentSet).apply();
-        Log.d("sharedNotes", TitleSet.toString());
-    }
-
-    private void getPreviousNotes() {
-        HashSet<String> TitleSet = (HashSet<String>) sharedPreferences.getStringSet("Title", null);
-        HashSet<String> ContentSet = (HashSet<String>) sharedPreferences.getStringSet("Content", null);
-        if (TitleSet == null || ContentSet == null) {
-            titles.add("Example Title");
-            contents.add("Example Context");
-        } else {
-            titles = new ArrayList(TitleSet);
-            contents = new ArrayList(ContentSet);
-        }
-    }
-
     public void addNewNote() {
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
         View promptsView = layoutInflater.inflate(R.layout.fragment_notes_addnote, null);
@@ -176,15 +201,14 @@ public class FragmentNotes extends Fragment {
                         });
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
-        storeDataOffline();
         notesAdapter.notifyDataSetChanged();
     }
 
     public void saveNotes() {
+        storeDataOffline();
         Map<String, Object> Notes = new HashMap<>();
         Notes.put("Titles", titles);
         Notes.put("Content", contents);
-        // Add a new document with a generated ID
         firebaseFirestore.collection("Users").document(googleSignIn.getId()).collection("Notes").document(googleSignIn.getId())
                 .set(Notes, SetOptions.merge())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -202,6 +226,7 @@ public class FragmentNotes extends Fragment {
     }
 
     private void syncNotes() {
+        retrieveDataOffline();
         Log.i("Data Coming", "inside the function");
         DocumentReference documentReference = firebaseFirestore.collection("Users")
                 .document(googleSignIn.getId()).collection("Notes").document(googleSignIn.getId());
@@ -210,14 +235,17 @@ public class FragmentNotes extends Fragment {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.getResult() != null) {
                     DocumentSnapshot snapshot = task.getResult();
-                    Log.d("FireStore", snapshot.getData().get("Titles").toString());
-                    titles = (ArrayList<String>) snapshot.getData().get("Titles");
-                    contents = (ArrayList<String>) snapshot.getData().get("Content");
-                    notesAdapter = new NotesAdapter(getContext(), titles, contents);
-                    listView.setAdapter(notesAdapter);
+                    try {
+                        titles = (ArrayList<String>) snapshot.getData().get("Titles");
+                        contents = (ArrayList<String>) snapshot.getData().get("Content");
+                        notesAdapter = new NotesAdapter(getContext(), titles, contents);
+                        listView.setAdapter(notesAdapter);
+                        storeDataOffline();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
     }
-
 }
