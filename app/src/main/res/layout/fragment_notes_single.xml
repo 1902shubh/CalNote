@@ -16,7 +16,7 @@
             android:id="@+id/topic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TOPIC"
+            android:text="@string/topic"
             android:textStyle="bold"
             android:fontFamily="@font/advent_pro"
             android:textColor="@color/colorWhite"
@@ -27,7 +27,7 @@
             android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Context goes here so feel free to drop here something of relevence. Hope you understand."
+            android:text="@string/context"
             android:textColor="@color/colorWhite"
             android:fontFamily="@font/advent_pro_thin"
             android:textSize="20sp" />

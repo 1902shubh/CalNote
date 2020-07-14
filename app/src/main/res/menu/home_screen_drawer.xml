@@ -9,47 +9,47 @@
             android:icon="@drawable/ic_profile"
             android:title="Profile" />
 
-    <item android:title="Features">
-        <menu>
-            <item
-                android:id="@+id/nav_attendance"
-                android:icon="@drawable/ic_all_subjects"
-                android:checkable="true"
-                android:title="Attendance" />
-            <item
-                android:id="@+id/nav_udhariyaan"
-                android:checkable="true"
-                android:icon="@drawable/ic_money"
-                android:title="Udhariyaan" />
+        <item android:title="Features">
+            <menu>
+                <item
+                    android:id="@+id/nav_attendance"
+                    android:checkable="true"
+                    android:icon="@drawable/ic_all_subjects"
+                    android:title="Attendance" />
+                <item
+                    android:id="@+id/nav_udhariyaan"
+                    android:checkable="true"
+                    android:icon="@drawable/ic_money"
+                    android:title="Udhariyaan" />
 
-            <item
-                android:id="@+id/nav_notes"
-                android:checkable="true"
-                android:icon="@drawable/ic_notes_40"
-                android:title="Notes" />
-            <item
-                android:id="@+id/nav_browser"
-                android:checkable="true"
-                android:icon="@drawable/ic_day_wise"
-                android:title="Browser" />
-        </menu>
-    </item>
-    <item android:title="Tools">
-        <menu>
-            <item
-                android:id="@+id/nav_introduction"
-                android:icon="@drawable/ic_intro"
-                android:title="Introduction" />
-
-            <item
-                android:id="@+id/nav_settings"
-                android:icon="@drawable/ic_settings"
-                android:title="Settings" />
-            <item
-                android:id="@+id/nav_logout"
-                android:icon="@drawable/ic_logout"
-                android:title="Log out" />
-        </menu>
-    </item>
+                <item
+                    android:id="@+id/nav_notes"
+                    android:checkable="true"
+                    android:icon="@drawable/ic_notes_40"
+                    android:title="Notes" />
+                <item
+                    android:id="@+id/nav_friends"
+                    android:checkable="true"
+                    android:icon="@drawable/ic_people"
+                    android:title="Friends" />
+                <item
+                    android:id="@+id/nav_browser"
+                    android:checkable="true"
+                    android:icon="@drawable/ic_day_wise"
+                    android:title="Browser" />
+            </menu>
+        </item>
+        <item android:title="Tools">
+            <menu>
+                <item
+                    android:id="@+id/nav_settings"
+                    android:icon="@drawable/ic_settings"
+                    android:title="Settings" />
+                <item
+                    android:id="@+id/nav_logout"
+                    android:icon="@drawable/ic_logout"
+                    android:title="Log out" />
+            </menu>
+        </item>
     </group>
 </menu>

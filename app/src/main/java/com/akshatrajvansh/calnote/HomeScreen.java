@@ -120,22 +120,22 @@ public class HomeScreen extends AppCompatActivity implements NavigationView.OnNa
             viewPager.setCurrentItem(4);
         } else if (id == R.id.nav_attendance) {
             Toast.makeText(HomeScreen.this, "Attendance Button Clicked", Toast.LENGTH_SHORT).show();
-            viewPager.setCurrentItem(0);
+            viewPager.setCurrentItem(0, false);
         } else if (id == R.id.nav_udhariyaan) {
             Toast.makeText(HomeScreen.this, "Udhariyaan Button Clicked", Toast.LENGTH_SHORT).show();
-            viewPager.setCurrentItem(1);
+            viewPager.setCurrentItem(1, false);
         } else if (id == R.id.nav_notes) {
             Toast.makeText(HomeScreen.this, "Notes Button Clicked", Toast.LENGTH_SHORT).show();
-            viewPager.setCurrentItem(2);
+            viewPager.setCurrentItem(2, false);
         } else if (id == R.id.nav_browser) {
             Toast.makeText(HomeScreen.this, "WebBrowser Button Clicked", Toast.LENGTH_SHORT).show();
-            viewPager.setCurrentItem(3);
-        }else if (id == R.id.nav_introduction) {
-            Toast.makeText(this, "Introduction Clicked", Toast.LENGTH_SHORT).show();
-
+            viewPager.setCurrentItem(3, false);
         } else if (id == R.id.nav_settings) {
             Toast.makeText(this, "Settings Clicked", Toast.LENGTH_SHORT).show();
-
+            startActivity(new Intent(HomeScreen.this, SettingScreen.class));
+        } else if (id == R.id.nav_friends) {
+            Toast.makeText(this, "Friends activated", Toast.LENGTH_SHORT).show();
+            viewPager.setCurrentItem(5, false);
         } else if (id == R.id.nav_logout) {
             new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert).setTitle("Log Out")
                     .setMessage("Do you want to log out?")
