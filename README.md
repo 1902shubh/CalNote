@@ -10,8 +10,8 @@ Make sure you read App's [Privacy Policy](PRIVACY_POLICY.md) and [Terms and Cond
 
 ## Preview
 
-![Home Screen](https://firebasestorage.googleapis.com/v0/b/calnote-b55c7.appspot.com/o/HomeScreen(2).jpg?alt=media&token=7f62aef0-9c20-4995-b56e-0d5a82d1b797)
-
+![Home Screen](https://firebasestorage.googleapis.com/v0/b/calnote-b55c7.appspot.com/o/Screenshot_20200714-202505(1).jpg?alt=media&token=ff5bf907-05c8-46f4-87bb-e36909b92244)
+![Home Screen](https://firebasestorage.googleapis.com/v0/b/calnote-b55c7.appspot.com/o/Screenshot_20200714-202505(1).jpg?alt=media&token=ff5bf907-05c8-46f4-87bb-e36909b92244)
 ## Features 
 
 - Attendance Manager
