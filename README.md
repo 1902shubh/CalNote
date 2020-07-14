@@ -10,7 +10,7 @@ Make sure you read App's [Privacy Policy](PRIVACY_POLICY.md) and [Terms and Cond
 
 ## Preview
 
-![login](https://firebasestorage.googleapis.com/v0/b/calnote-b55c7.appspot.com/o/Screenshot_20200711-031725.jpg?alt=media&token=bfb64681-e312-4f37-b348-9ca6c7c9d670)
+![Home Screen](https://firebasestorage.googleapis.com/v0/b/calnote-b55c7.appspot.com/o/HomeScreen(1).jpg?alt=media&token=cb860aad-e6b9-4e8b-b90b-7077cddd17be)
 
 _Browse all preview pictures [here](gs://calnote-b55c7.appspot.com/Screenshot_20200711-031725.jpg)._
 
