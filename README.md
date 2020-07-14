@@ -12,6 +12,7 @@ Make sure you read App's [Privacy Policy](PRIVACY_POLICY.md) and [Terms and Cond
 
 ![Home Screen](https://firebasestorage.googleapis.com/v0/b/calnote-b55c7.appspot.com/o/Screenshot_20200714-202505(1).jpg?alt=media&token=ff5bf907-05c8-46f4-87bb-e36909b92244)
 ![Home Screen](https://firebasestorage.googleapis.com/v0/b/calnote-b55c7.appspot.com/o/sec.jpg?alt=media&token=900f1fed-9e77-4e44-aa80-193ed08c9818)
+![Home Screen](https://firebasestorage.googleapis.com/v0/b/calnote-b55c7.appspot.com/o/Screenshot_20200711-031719.jpg?alt=media&token=ee912acf-7f25-4744-a5b1-2464c1afb6c5)
 ## Features 
 
 - Attendance Manager
@@ -20,7 +21,7 @@ Make sure you read App's [Privacy Policy](PRIVACY_POLICY.md) and [Terms and Cond
 - Udhariyaan
   - Pay back or collect your debts. 
   - Easy to pay or recieve feature.
-  - Linked with UPI id.
+  - Linked with UPI id.https://firebasestorage.googleapis.com/v0/b/calnote-b55c7.appspot.com/o/Screenshot_20200711-031719.jpg?alt=media&token=ee912acf-7f25-4744-a5b1-2464c1afb6c5
   - Request money from friends.
 - Friends
   - Chat with friends.
