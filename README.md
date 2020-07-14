@@ -39,10 +39,6 @@ _Browse all preview pictures [here](gs://calnote-b55c7.appspot.com/Screenshot_20
 - Chat
   - Add friends and send messages to them.
 
-## Changelog
-
-Read all Changelog [HERE](CHANGELOG.md).
-
 ## Installation
 
 *Setting up project*
