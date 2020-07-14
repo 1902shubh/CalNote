@@ -2,7 +2,7 @@
 
 CalNote is a project that I started to improve my Android Development knowledge. Later on I have decided to make it public, open source and publish it on Play Store.
 
-It uses [Firebase's](https://firebase.google.com) Authentication/Database/Storage/Messaging/CrashReporting libraries for it's implementation and several other libraries that they are listed on [Third Party Notices](THIRD_PARTY_NOTICES.md).
+It uses [Firebase's](https://firebase.google.com) Authentication/Database/Storage libraries for it's implementation and several other libraries.
 
 Make sure you read App's [Privacy Policy](PRIVACY_POLICY.md) and [Terms and Conditions](TERMS_AND_CONDITIONS.md) before using it.
 
