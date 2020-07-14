@@ -1,2 +1,2 @@
 # CalNote
-Modern Attendance Manager application
+##Modern All Purpose android application
