@@ -16,7 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.akshatrajvansh.calnote.Adapters.LoanRecAdapter;
+import com.akshatrajvansh.calnote.Adapters.FriendsPayAdapter;
 import com.akshatrajvansh.calnote.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -37,7 +37,7 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
-public class FragmentUdhari extends Fragment {
+public class FragmentFriendsPay extends Fragment {
     private FirebaseFirestore firebaseFirestore;
     private GoogleSignInAccount googleSignIn;
     private Context context;
@@ -50,7 +50,7 @@ public class FragmentUdhari extends Fragment {
     private String debtName, debtAmount, debtAction;
     RecyclerView loanRecView;
     private RecyclerView.LayoutManager layoutMan;
-    private RecyclerView.Adapter loanAdapter;
+    private RecyclerView.Adapter friendsPayAdapter;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +60,7 @@ public class FragmentUdhari extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_udhari, container, false);
+        View view = inflater.inflate(R.layout.fragment_friendspay, container, false);
         context = getContext();
         firebaseFirestore = FirebaseFirestore.getInstance();
         googleSignIn = GoogleSignIn.getLastSignedInAccount(context);
@@ -80,7 +80,7 @@ public class FragmentUdhari extends Fragment {
     }
     public void addDebtPrompt() {
         LayoutInflater layoutInflater = LayoutInflater.from(context);
-        View promptsView = layoutInflater.inflate(R.layout.debt_adding_prompt, null);
+        View promptsView = layoutInflater.inflate(R.layout.fragment_friendspay_adddebt, null);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
         alertDialogBuilder.setView(promptsView);
         loanName = (EditText) promptsView.findViewById(R.id.person_name);
@@ -161,8 +161,8 @@ public class FragmentUdhari extends Fragment {
                             DebtNames.add(documentSnapshot.getString("Person Name"));
                             DebtAmounts.add(documentSnapshot.getString("Amount"));
                             DebtAction.add(documentSnapshot.getString("Action"));
-                            loanAdapter = new LoanRecAdapter(context, DebtNames, DebtAmounts, DebtAction);
-                            loanRecView.setAdapter(loanAdapter);
+                            friendsPayAdapter = new FriendsPayAdapter(context, DebtNames, DebtAmounts, DebtAction);
+                            loanRecView.setAdapter(friendsPayAdapter);
                         }
                     }
                 } else {

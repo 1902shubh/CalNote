@@ -21,8 +21,7 @@
     <string name="title_activity_tabbed">TabbedActivity</string>
     <string name="password">Password</string>
     <string name="log_in">Log In</string>
-    <string name="profile_desc">A biography, or simply bio, is a detailed description of a person\'s life. It involves more than just the basic facts like education, work, relationships, and death; it portrays a person\'s experience of these life events. Unlike a profile or curriculum vitae (résumé), a biography presents a subject\'s life story, highlighting various aspects of his or her life, including intimate details of experience, and may include an analysis of the subject\'s personality. Biographical works are usually non-fiction, but fiction can also be used to portray a person\'s life. One in-depth form of biographical coverage is called legacy writing. Works in diverse media, from literature to film, form the genre known as biography. An authorized biography is written with the permission, cooperation, and at times, participation of a subject or a subject\'s heirs. An autobiography is written by the person himself or herself, sometimes with the assistance of a collaborator or ghostwriter.</string>
-    <string name="context">Context goes here so feel free to drop here something of relevence. Hope you understand.</string>
+    <string name="context">Context goes here so feel free to drop here something of relevance. Hope you understand.</string>
     <string name="topic">TOPIC</string>
     <string name="title_activity_settings_screen">SettingsScreen</string>
 
@@ -37,8 +36,12 @@
     <!-- Sync Preferences -->
     <string name="sync_title">Sync email periodically</string>
     <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
+    <!-- Developer Information -->
+    <string name="developer_name">Akshat Raj Vansh</string>
+    <string name="developer_title">Android Developer</string>
+    <string name="developer_info">Hola Amigos! Hope this application is serving its purpose. For Queries mail me at abc@abc.con</string>
 
 </resources>

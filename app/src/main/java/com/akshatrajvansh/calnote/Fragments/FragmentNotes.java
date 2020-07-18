@@ -1,5 +1,7 @@
 package com.akshatrajvansh.calnote.Fragments;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
@@ -10,12 +12,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethod;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import com.akshatrajvansh.calnote.Adapters.NotesAdapter;
@@ -37,9 +45,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -54,6 +60,11 @@ public class FragmentNotes extends Fragment {
     private FirebaseFirestore firebaseFirestore;
     private GoogleSignInAccount googleSignIn;
     SQLiteDatabase localStorage;
+    int matchParent;
+    private EditText titleET, contentET;
+    private Button saveBT, deleteBT, cancelBT;
+    private LinearLayout linearLayoutET;
+    ConstraintLayout constraintLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,15 +82,17 @@ public class FragmentNotes extends Fragment {
         View view = inflater.inflate(R.layout.fragment_notes, container, false);
         firebaseFirestore = FirebaseFirestore.getInstance();
         googleSignIn = GoogleSignIn.getLastSignedInAccount(getContext());
-
         localStorage = getContext().openOrCreateDatabase("notes", MODE_PRIVATE, null);
         localStorage.execSQL("CREATE TABLE IF NOT EXISTS notes (data VARCHAR)");
-
+        constraintLayout = view.findViewById(R.id.constraintLayoutNotes);
         listView = view.findViewById(R.id.listView);
+        matchParent = constraintLayout.getLayoutParams().height;
         addNewNote = view.findViewById(R.id.addNewNote);
+        linkEditLayout(view);
         notesAdapter = new NotesAdapter(getContext(), titles, contents);
         listView.setAdapter(notesAdapter);
         syncNotes();
+        defaultView();
         addNewNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,16 +102,92 @@ public class FragmentNotes extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                editNote(position);
+                openNote(view, position);
+            }
+        });
+        saveBT.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                contents.set(Integer.parseInt(titleET.getTag().toString()), contentET.getText().toString());
+                notesAdapter.notifyDataSetChanged();
+                hideKeyboard();
+                defaultView();
+            }
+        });
+        deleteBT.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteNote(Integer.parseInt(titleET.getTag().toString()));
+                notesAdapter.notifyDataSetChanged();
+                saveNotes();
+                hideKeyboard();
+                defaultView();
+            }
+        });
+        cancelBT.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideKeyboard();
+                defaultView();
             }
         });
         return view;
     }
 
+    public void hideKeyboard() {
+        Activity activity = getActivity();
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    private void showKeyboard() {
+        Activity activity = getActivity();
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+    }
+
+    @SuppressLint("RestrictedApi")
+    private void defaultView() {
+        linearLayoutET.setVisibility(View.GONE);
+        listView.setVisibility(View.VISIBLE);
+        addNewNote.setVisibility(View.VISIBLE);
+    }
+
+    private void linkEditLayout(View view) {
+        linearLayoutET = view.findViewById(R.id.editLayout);
+        titleET = view.findViewById(R.id.topicEdit);
+        contentET = view.findViewById(R.id.contentEdit);
+        saveBT = view.findViewById(R.id.saveBtn);
+        deleteBT = view.findViewById(R.id.deleteBtn);
+        cancelBT = view.findViewById(R.id.cancelBtn);
+    }
+
+    @SuppressLint("RestrictedApi")
+    private void openNote(View view, int position) {
+        linearLayoutET.setVisibility(View.VISIBLE);
+        addNewNote.setVisibility(View.GONE);
+        listView.setVisibility(View.GONE);
+        titleET.setText(titles.get(position));
+        contentET.setText(contents.get(position));
+        titleET.setTag(position);
+    }
+
     private void storeDataOffline() {
         try {
-            Log.d("JSONFormat", "Titles: "+titles);
-            Log.d("JSONFormat", "Contents: "+contents);
+            Log.d("JSONFormat", "Titles: " + titles);
+            Log.d("JSONFormat", "Contents: " + contents);
             JSONObject json = new JSONObject();
             json.put("jsonTitles", new JSONArray(titles));
             json.put("jsonContents", new JSONArray(contents));
@@ -130,7 +219,7 @@ public class FragmentNotes extends Fragment {
             JSONArray jsonContents = jsonObject.getJSONArray("jsonContents");
             titles.clear();
             contents.clear();
-            for(int i=0; i<jsonTitle.length(); i++){
+            for (int i = 0; i < jsonTitle.length(); i++) {
                 titles.add(jsonTitle.getString(i));
                 contents.add(jsonContents.getString(i));
             }
@@ -147,34 +236,6 @@ public class FragmentNotes extends Fragment {
         titles.remove(position);
         contents.remove(position);
         notesAdapter.notifyDataSetChanged();
-        saveNotes();
-    }
-
-    public void editNote(final int position) {
-        LayoutInflater layoutInflater = LayoutInflater.from(getContext());
-        View promptsView = layoutInflater.inflate(R.layout.fragment_notes_addnote, null);
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
-        alertDialogBuilder.setView(promptsView);
-        newNoteTitle = (EditText) promptsView.findViewById(R.id.title_note);
-        newNoteTitle.setText(titles.get(position));
-        newNoteContent = (EditText) promptsView.findViewById(R.id.content_note);
-        newNoteContent.setText(contents.get(position));
-        alertDialogBuilder.setCancelable(false).setPositiveButton("Save", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                titles.set(position, newNoteTitle.getText().toString());
-                contents.set(position, newNoteContent.getText().toString());
-                notesAdapter.notifyDataSetChanged();
-            }
-        })
-                .setNegativeButton("Delete",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                                deleteNote(position);
-                            }
-                        });
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
         saveNotes();
     }
 
@@ -203,6 +264,7 @@ public class FragmentNotes extends Fragment {
         alertDialog.show();
         notesAdapter.notifyDataSetChanged();
     }
+
 
     public void saveNotes() {
         storeDataOffline();

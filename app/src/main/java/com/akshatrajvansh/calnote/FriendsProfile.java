@@ -4,8 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-import java.util.ArrayList;
-
 public class FriendsProfile extends AppCompatActivity {
 
 

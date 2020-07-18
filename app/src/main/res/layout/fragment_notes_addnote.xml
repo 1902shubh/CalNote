@@ -2,64 +2,32 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout_root"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="match_parent"
     android:background="@color/colorWhite"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:padding="10dp">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+    <EditText
+        android:id="@+id/title_note"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/anaheim"
+        android:gravity="center"
+        android:hint="TITLE"
+        android:textColor="@color/colorTextDialog"
+        android:textSize="25sp">
+        <requestFocus />
+    </EditText>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/audiowide"
-                    android:text="TITLE "
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="25sp" />
-
-
-                <EditText
-                    android:id="@+id/title_note"
-                    android:layout_width="250dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:fontFamily="@font/anaheim"
-                    android:gravity="center"
-                    android:textColor="@color/colorTextDialog"
-                    android:textSize="25sp">
-
-                        <requestFocus />
-                </EditText>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/audiowide"
-                    android:text="CONTENT"
-                    android:gravity="center"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="25sp" />
-
-                <EditText
-                    android:id="@+id/content_note"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:fontFamily="@font/anaheim"
-                    android:gravity="center"
-                    android:textColor="@color/colorTextDialog"
-                    android:textSize="25sp" />
-        </LinearLayout>
+    <EditText
+        android:id="@+id/content_note"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:fontFamily="@font/anaheim"
+        android:gravity="center_horizontal|left"
+        android:hint="Write your note here."
+        android:textColor="@color/colorTextDialog"
+        android:textSize="25sp" />
 
 </LinearLayout>

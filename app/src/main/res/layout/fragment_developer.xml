@@ -24,7 +24,7 @@
                 android:layout_height="match_parent">
 
                 <ImageView
-                    android:id="@+id/doc_imgBlur"
+                    android:id="@+id/dev_image_blur"
                     android:layout_width="wrap_content"
                     android:layout_height="300dp"
                     android:alpha="0.2"
@@ -38,7 +38,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <com.mikhaellopez.circularimageview.CircularImageView
-                    android:id="@+id/doc_img"
+                    android:id="@+id/dev_image"
                     android:layout_width="200dp"
                     android:layout_height="200dp"
                     android:layout_marginTop="5dp"
@@ -83,28 +83,28 @@
                     android:paddingTop="15dp">
 
                     <TextView
-                        android:id="@+id/doc_name"
+                        android:id="@+id/dev_name"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:fontFamily="@font/advent_pro"
                         android:gravity="center"
-                        android:text="Akshat Raj Vansh"
+                        android:text="@string/developer_name"
                         android:textColor="@color/colorWhite"
                         android:textSize="30sp"
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/doc_spec"
+                        android:id="@+id/dev_title"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:fontFamily="@font/advent_pro_thin"
                         android:gravity="center"
-                        android:text="This is my profile"
+                        android:text="@string/developer_title"
                         android:textColor="@color/colorWhite"
                         android:textSize="20sp" />
 
                     <TextView
-                        android:id="@+id/doc_loc"
+                        android:id="@+id/dev_info"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:fontFamily="@font/advent_pro_thin"
@@ -112,9 +112,9 @@
                         android:paddingEnd="30dp"
                         android:padding="30dp"
                         android:layout_marginTop="30dp"
-                        android:text="@string/profile_desc"
+                        android:text="@string/developer_info"
                         android:textColor="@color/colorWhite"
-                        android:textSize="15sp" />
+                        android:textSize="20sp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
         </LinearLayout>

@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.firestore.ThrowOnExtraProperties;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,20 +40,27 @@ public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.Vi
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.subjects_cardview, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_attendance_single, parent, false);
         ViewHolder holder = new ViewHolder(view);
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         Log.d(TAG, "onBindViewHolder: called.");
         //if (SubjectCode.get(position) != null && !SubjectCode.get(position).contains("CODE")) {
         try {
             holder.subjectCode.setText(FragmentAttendance.SubjectCode.get(position));
             holder.attendance.setText(getAttendance(FragmentAttendance.AttendedClasses.get(position), FragmentAttendance.BunkedClasses.get(position)));
-            holder.warning.setText(getWarning(FragmentAttendance.AttendedClasses.get(position), FragmentAttendance.BunkedClasses.get(position)));
+            holder.percent.setText(getPercent(FragmentAttendance.AttendedClasses.get(position), FragmentAttendance.BunkedClasses.get(position)));
 
+            holder.cardViewLayout.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    Toast.makeText(mContext, "Coming Soon", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+            });
             holder.cardViewLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -60,10 +68,10 @@ public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.Vi
                     Toast.makeText(mContext, FragmentAttendance.SubjectCode.get(position), Toast.LENGTH_SHORT).show();
                 }
             });
-
             holder.AttendedClasses.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
                     FragmentAttendance.AttendedClasses.set(position, String.valueOf(Integer.parseInt(FragmentAttendance.AttendedClasses.get(position)) + 1));
                     UpdateCloud();
                 }
@@ -162,7 +170,7 @@ public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.Vi
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView subjectCode;
-        TextView warning;
+        TextView percent;
         TextView attendance;
         Button AttendedClasses, BunkedClasses;
         CardView cardViewLayout;
@@ -173,7 +181,7 @@ public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.Vi
             subjectCode = itemView.findViewById(R.id.subcode);
             AttendedClasses = itemView.findViewById(R.id.attended);
             BunkedClasses = itemView.findViewById(R.id.bunked);
-            warning = itemView.findViewById(R.id.warnings);
+            percent = itemView.findViewById(R.id.percentage);
             attendance = itemView.findViewById(R.id.class_attended);
         }
     }

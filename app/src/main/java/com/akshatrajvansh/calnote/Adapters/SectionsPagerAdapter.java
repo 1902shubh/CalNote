@@ -11,8 +11,8 @@ import com.akshatrajvansh.calnote.Fragments.FragmentAttendance;
 import com.akshatrajvansh.calnote.Fragments.FragmentBrowser;
 import com.akshatrajvansh.calnote.Fragments.FragmentFriends;
 import com.akshatrajvansh.calnote.Fragments.FragmentNotes;
-import com.akshatrajvansh.calnote.Fragments.FragmentProfile;
-import com.akshatrajvansh.calnote.Fragments.FragmentUdhari;
+import com.akshatrajvansh.calnote.Fragments.FragmentDeveloper;
+import com.akshatrajvansh.calnote.Fragments.FragmentFriendsPay;
 import com.akshatrajvansh.calnote.R;
 
 
@@ -33,13 +33,13 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return new FragmentAttendance();
             case 1:
-                return new FragmentUdhari();
+                return new FragmentFriendsPay();
             case 2:
                 return new FragmentNotes();
             case 3:
                 return new FragmentBrowser();
             case 4:
-                return new FragmentProfile();
+                return new FragmentDeveloper();
             case 5:
                 return new FragmentFriends();
         }

@@ -176,7 +176,7 @@ public class FragmentAttendance extends Fragment {
 
     public void addNewSubject() {
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
-        View promptsView = layoutInflater.inflate(R.layout.subject_adding_prompt, null);
+        View promptsView = layoutInflater.inflate(R.layout.fragment_attendance_addsub, null);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
         alertDialogBuilder.setView(promptsView);
         subjectName = (EditText) promptsView.findViewById(R.id.subject_name);

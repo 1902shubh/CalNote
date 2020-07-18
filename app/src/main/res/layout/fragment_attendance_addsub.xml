@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_root"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/colorWhite"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/audiowide"
+            android:text="SUBJECT CODE"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp" />
+
+
+        <EditText
+            android:id="@+id/subject_code"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/anaheim"
+            android:gravity="center"
+            android:layout_marginStart="20dp"
+            android:textColor="@color/colorTextDialog"
+            android:textSize="25sp">
+
+            <requestFocus />
+        </EditText>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/audiowide"
+            android:text="SUBJECT NAME"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/subject_name"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/anaheim"
+            android:gravity="center"
+            android:layout_marginStart="20dp"
+            android:textColor="@color/colorTextDialog"
+            android:textSize="25sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/audiowide"
+            android:text="CLASSES ATTENDED"
+            android:textColor="@color/colorPrimary"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/attendedClasses"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:fontFamily="@font/anaheim"
+            android:gravity="center"
+            android:inputType="text"
+            android:textColor="@color/colorTextDialog"
+            android:textSize="25sp">
+
+        </EditText>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/audiowide"
+            android:text="CLASSES BUNKED"
+            android:textColor="@color/colorPrimary"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/bunkedClasses"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:fontFamily="@font/anaheim"
+            android:gravity="center"
+            android:inputType="text"
+            android:textColor="@color/colorTextDialog"
+            android:textSize="25sp">
+
+        </EditText>
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -7,10 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.akshatrajvansh.calnote.R;
@@ -24,9 +22,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LoanRecAdapter extends RecyclerView.Adapter<LoanRecAdapter.ViewHolder> {
+public class FriendsPayAdapter extends RecyclerView.Adapter<FriendsPayAdapter.ViewHolder> {
 
-    private static final String TAG = "LoanRecAdapter";
+    private static final String TAG = "FriendsPayAdapter";
     private GoogleSignInAccount googleSignIn;
     private ArrayList<String> DebtName;
     private ArrayList<String> DebtAmount;
@@ -34,7 +32,7 @@ public class LoanRecAdapter extends RecyclerView.Adapter<LoanRecAdapter.ViewHold
     private FirebaseFirestore firebaseFirestore;
     private Context mContext;
 
-    public LoanRecAdapter(Context context, ArrayList<String> debtName, ArrayList<String> debtAmount, ArrayList<String> debtAction) {
+    public FriendsPayAdapter(Context context, ArrayList<String> debtName, ArrayList<String> debtAmount, ArrayList<String> debtAction) {
 
         DebtName = debtName;
         DebtAmount = debtAmount;
@@ -46,7 +44,7 @@ public class LoanRecAdapter extends RecyclerView.Adapter<LoanRecAdapter.ViewHold
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.debt_cardview, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_friendspay_single, parent, false);
         ViewHolder holder = new ViewHolder(view);
         return holder;
     }
