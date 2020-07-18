@@ -17,7 +17,7 @@ Make sure you read App's [Privacy Policy](PRIVACY_POLICY.md) and [Terms and Cond
 - Attendance Manager
   - Store attendance on a daily basis.
   - Get Attendace Percentage and Notifications for classes.
-- Udhariyaan
+- FriendsPay
   - Pay back or collect your debts. 
   - Easy to pay or recieve feature.
   - Linked with UPI id.
