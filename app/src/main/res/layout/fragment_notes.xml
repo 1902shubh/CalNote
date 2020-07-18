@@ -53,30 +53,30 @@
                         android:layout_columnWeight="1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@color/colorTransparent"
+                        android:background="@drawable/button_rounded_white"
                         android:fontFamily="@font/advent_pro"
                         android:text="CANCEL"
-                        android:textColor="@color/colorWhite" />
+                        android:textColor="@color/colorButtonPressed" />
 
                     <Button
                         android:id="@+id/deleteBtn"
                         android:layout_columnWeight="1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@color/colorTransparent"
+                        android:background="@drawable/button_rounded_white"
                         android:fontFamily="@font/advent_pro"
                         android:text="DELETE"
-                        android:textColor="@color/colorWhite" />
+                        android:textColor="@color/colorButtonPressed" />
 
                     <Button
                         android:id="@+id/saveBtn"
                         android:layout_columnWeight="1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@color/colorTransparent"
+                        android:background="@drawable/button_rounded_white"
                         android:fontFamily="@font/advent_pro"
                         android:text="SAVE"
-                        android:textColor="@color/colorWhite" />
+                        android:textColor="@color/colorButtonPressed" />
                 </GridLayout>
 
                 <EditText

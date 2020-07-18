@@ -4,11 +4,6 @@
     tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_profile"
-            android:icon="@drawable/ic_profile"
-            android:visible="false"
-            android:title="Profile" />
 
         <item android:title="Features">
             <menu>
@@ -17,8 +12,9 @@
                     android:checkable="true"
                     android:icon="@drawable/ic_all_subjects"
                     android:title="Attendance" />
+
                 <item
-                    android:id="@+id/nav_udhariyaan"
+                    android:id="@+id/nav_friendsPay"
                     android:checkable="true"
                     android:visible="false"
                     android:icon="@drawable/ic_money"
@@ -29,27 +25,11 @@
                     android:checkable="true"
                     android:icon="@drawable/ic_notes_40"
                     android:title="Notes" />
-                <item
-                    android:id="@+id/nav_friends"
-                    android:checkable="true"
-                    android:visible="false"
-                    android:icon="@drawable/ic_people"
-                    android:title="Friends" />
-                <item
-                    android:id="@+id/nav_browser"
-                    android:checkable="true"
-                    android:visible="false"
-                    android:icon="@drawable/ic_day_wise"
-                    android:title="Browser" />
+
             </menu>
         </item>
         <item android:title="Tools">
             <menu>
-                <item
-                    android:id="@+id/nav_settings"
-                    android:icon="@drawable/ic_settings"
-                    android:visible="false"
-                    android:title="Settings" />
                 <item
                     android:id="@+id/nav_developer"
                     android:icon="@drawable/ic_developer_info"

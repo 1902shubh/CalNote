@@ -28,7 +28,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Timer;
 
 public class LoginScreen extends AppCompatActivity {
 

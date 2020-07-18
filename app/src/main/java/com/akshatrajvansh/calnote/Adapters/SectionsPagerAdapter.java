@@ -9,7 +9,6 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.akshatrajvansh.calnote.Fragments.FragmentAttendance;
 import com.akshatrajvansh.calnote.Fragments.FragmentBrowser;
-import com.akshatrajvansh.calnote.Fragments.FragmentFriends;
 import com.akshatrajvansh.calnote.Fragments.FragmentNotes;
 import com.akshatrajvansh.calnote.Fragments.FragmentDeveloper;
 import com.akshatrajvansh.calnote.Fragments.FragmentFriendsPay;
@@ -19,7 +18,7 @@ import com.akshatrajvansh.calnote.R;
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @StringRes
-    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2, R.string.tab_text_3, R.string.tab_text_4, R.string.tab_text_5, R.string.tab_text_6};
+    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2, R.string.tab_text_3, R.string.tab_text_4};
     private final Context mContext;
 
     public SectionsPagerAdapter(Context context, FragmentManager fm) {
@@ -40,8 +39,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 return new FragmentBrowser();
             case 4:
                 return new FragmentDeveloper();
-            case 5:
-                return new FragmentFriends();
         }
         return new FragmentAttendance();
     }
@@ -54,6 +51,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 6;
+        return 5;
     }
 }
