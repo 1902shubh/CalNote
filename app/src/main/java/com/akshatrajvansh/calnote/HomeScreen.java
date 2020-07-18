@@ -52,7 +52,7 @@ public class HomeScreen extends AppCompatActivity implements NavigationView.OnNa
     private SectionsPagerAdapter sectionsPagerAdapter;
     private LockableViewPager viewPager;
 
-    private TextView userName, userEmailID;
+    private TextView userName, userEmailID, titleBar;
     private CircularImageView userProfilePic;
     private ActionBarDrawerToggle toggle;
 
@@ -78,6 +78,7 @@ public class HomeScreen extends AppCompatActivity implements NavigationView.OnNa
         //Navigation Header will try to access data from the Google Account
         userEmailID = (TextView) headerView.findViewById(R.id.all_sub_email);
         userName = (TextView) headerView.findViewById(R.id.all_sub_username);
+        titleBar = (TextView) findViewById(R.id.titleBar);
         userProfilePic = (CircularImageView) headerView.findViewById(R.id.profilePhoto);
         userEmailID.setText(googleSignIn.getEmail());
         userName.setText(googleSignIn.getDisplayName());
@@ -117,30 +118,35 @@ public class HomeScreen extends AppCompatActivity implements NavigationView.OnNa
         //(findViewById(R.id.nav_all_subjects)).setClickable(false);
         if (id == R.id.nav_profile) {
             Toast.makeText(HomeScreen.this, "Coming Soon", Toast.LENGTH_SHORT).show();
-
             // viewPager.setCurrentItem(4);
         } else if (id == R.id.nav_attendance) {
             Toast.makeText(HomeScreen.this, "Attendance Button Clicked", Toast.LENGTH_SHORT).show();
             viewPager.setCurrentItem(0, false);
+            titleBar.setText("Attendance");
         } else if (id == R.id.nav_udhariyaan) {
             Toast.makeText(HomeScreen.this, "Udhariyaan Button Clicked", Toast.LENGTH_SHORT).show();
             viewPager.setCurrentItem(1, false);
+            titleBar.setText("FriendsPay");
         } else if (id == R.id.nav_notes) {
             Toast.makeText(HomeScreen.this, "Notes Button Clicked", Toast.LENGTH_SHORT).show();
             viewPager.setCurrentItem(2, false);
+            titleBar.setText("Notes");
         } else if (id == R.id.nav_browser) {
             Toast.makeText(HomeScreen.this, "WebBrowser Button Clicked", Toast.LENGTH_SHORT).show();
             viewPager.setCurrentItem(3, false);
+            titleBar.setText("Browser");
         } else if (id == R.id.nav_settings) {
             Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(HomeScreen.this, SettingScreen.class));
         } else if (id == R.id.nav_friends) {
             Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show();
             //viewPager.setCurrentItem(5, false);
+            titleBar.setText("Friends");
         }
         else if (id == R.id.nav_developer) {
 //            Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show();
             viewPager.setCurrentItem(4, false);
+            titleBar.setText("Developer");
         }else if (id == R.id.nav_logout) {
             new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert).setTitle("Log Out")
                     .setMessage("Do you want to log out?")
