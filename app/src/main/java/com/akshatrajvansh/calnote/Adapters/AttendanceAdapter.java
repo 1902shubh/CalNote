@@ -101,7 +101,9 @@ public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.Vi
         int att = Integer.parseInt(AttendedClasses);
         int bun = Integer.parseInt(BunkedClasses);
         int total = att + bun;
-        int percent = (att * 100) / total;
+        int percent = 0;
+        if (total != 0)
+            percent = (att * 100) / total;
         return String.valueOf(percent);
     }
 
