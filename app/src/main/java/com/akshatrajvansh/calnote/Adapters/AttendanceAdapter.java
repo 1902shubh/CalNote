@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,6 +58,7 @@ public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.Vi
             holder.subjectName.setText(FragmentAttendance.SubjectName.get(position));
             holder.attendedClasses.setText("Attended: " + FragmentAttendance.AttendedClasses.get(position));
             holder.bunkedClasses.setText("Bunked: " + FragmentAttendance.BunkedClasses.get(position));
+            setPreviousDayImage(holder, FragmentAttendance.PreviousClasses.get(position));
             String percent = getPercent(FragmentAttendance.AttendedClasses.get(position), FragmentAttendance.BunkedClasses.get(position)) + "%";
             holder.totalClasses.setText(getTotal(FragmentAttendance.AttendedClasses.get(position), FragmentAttendance.BunkedClasses.get(position)));
             holder.percentAttendance.setText(percent);
@@ -76,8 +78,8 @@ public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.Vi
             holder.AttendedClasses.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
                     FragmentAttendance.AttendedClasses.set(position, String.valueOf(Integer.parseInt(FragmentAttendance.AttendedClasses.get(position)) + 1));
+                    updatePreviousClasses(holder, "P", position);
                     UpdateCloud();
                 }
             });
@@ -86,6 +88,7 @@ public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.Vi
                 @Override
                 public void onClick(View view) {
                     FragmentAttendance.BunkedClasses.set(position, String.valueOf(Integer.parseInt(FragmentAttendance.BunkedClasses.get(position)) + 1));
+                    updatePreviousClasses(holder, "A", position);
                     UpdateCloud();
                 }
             });
@@ -106,9 +109,36 @@ public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.Vi
         int att = Integer.parseInt(AttendedClasses);
         int bun = Integer.parseInt(BunkedClasses);
         int total = att + bun;
-        return "Total: "+ total;
+        return "Total: " + total;
     }
 
+    public int getTotalInteger(String AttendedClasses, String BunkedClasses) {
+        int att = Integer.parseInt(AttendedClasses);
+        int bun = Integer.parseInt(BunkedClasses);
+        return att + bun;
+    }
+
+    private void updatePreviousClasses(ViewHolder view, String event, int position) {
+        String days = FragmentAttendance.PreviousClasses.get(position) + event;
+        days = days.substring(1);
+        FragmentAttendance.PreviousClasses.set(position, days);
+        setPreviousDayImage(view, days);
+    }
+
+    private void setPreviousDayImage(ViewHolder view, String days) {
+        view.day1.setImageResource(getResource(days.charAt(0) + ""));
+        view.day2.setImageResource(getResource(days.charAt(1) + ""));
+        view.day3.setImageResource(getResource(days.charAt(2) + ""));
+    }
+
+    private int getResource(String event) {
+        if (event.equals("N"))
+            return R.drawable.attendance_neutral;
+        else if (event.equals("P"))
+            return R.drawable.attendance_present;
+        else
+            return R.drawable.attendance_absent;
+    }
 
     @Override
     public int getItemCount() {
@@ -121,6 +151,7 @@ public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.Vi
         FragmentAttendance.AttendedClasses.remove(position);
         FragmentAttendance.BunkedClasses.remove(position);
         FragmentAttendance.SubjectName.remove(position);
+        FragmentAttendance.PreviousClasses.remove(position);
         FragmentAttendance.attendanceAdapter.notifyDataSetChanged();
         UpdateCloud();
     }
@@ -132,6 +163,7 @@ public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.Vi
         user.put("Subject Code", FragmentAttendance.SubjectCode);
         user.put("Attended Classes", FragmentAttendance.AttendedClasses);
         user.put("Bunked Classes", FragmentAttendance.BunkedClasses);
+        user.put("Previous Classes", FragmentAttendance.PreviousClasses);
         // Add a new document with a generated ID
         Log.d("DEBX", googleSignIn.getId());
         firebaseFirestore.collection("Users").document(googleSignIn.getId()).collection("Attendance").document(googleSignIn.getId())
@@ -156,6 +188,7 @@ public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.Vi
         Button AttendedClasses, BunkedClasses;
         CardView cardViewLayout;
         ConstraintLayout moreDetails;
+        ImageView day1, day2, day3;
         ProgressBar progressBar;
 
         public ViewHolder(View itemView) {
@@ -171,6 +204,9 @@ public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.Vi
             bunkedClasses = itemView.findViewById(R.id.bunkedClasses);
             moreDetails = itemView.findViewById(R.id.att_more_layout);
             progressBar = itemView.findViewById(R.id.progressBar);
+            day1 = itemView.findViewById(R.id.day1);
+            day2 = itemView.findViewById(R.id.day2);
+            day3 = itemView.findViewById(R.id.day3);
         }
     }
 }

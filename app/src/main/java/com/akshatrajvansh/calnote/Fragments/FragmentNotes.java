@@ -108,8 +108,10 @@ public class FragmentNotes extends Fragment {
         saveBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                titles.set(Integer.parseInt(titleET.getTag().toString()), titleET.getText().toString());
                 contents.set(Integer.parseInt(titleET.getTag().toString()), contentET.getText().toString());
                 notesAdapter.notifyDataSetChanged();
+                saveNotes();
                 hideKeyboard();
                 defaultView();
             }

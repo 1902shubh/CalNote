@@ -55,6 +55,7 @@ public class FragmentAttendance extends Fragment {
     public static ArrayList<String> SubjectCode = new ArrayList<>();
     public static ArrayList<String> AttendedClasses = new ArrayList<>();
     public static ArrayList<String> BunkedClasses = new ArrayList<>();
+    public static ArrayList<String> PreviousClasses = new ArrayList<>();
     SQLiteDatabase localStorage;
 
     @Override
@@ -96,9 +97,10 @@ public class FragmentAttendance extends Fragment {
             json.put("subjectCode", new JSONArray(SubjectCode));
             json.put("classesAttended", new JSONArray(AttendedClasses));
             json.put("classesBunked", new JSONArray(BunkedClasses));
+            json.put("previousClasses", new JSONArray(PreviousClasses));
             String stringJSON = json.toString();
             Log.d("JSONFormat", stringJSON);
-            localStorage.execSQL("DELETE from notes");
+            localStorage.execSQL("DELETE from attendance");
             String sql = "INSERT INTO notes (data) VALUES (?)";
             localStorage.execSQL("CREATE TABLE IF NOT EXISTS notes (data VARCHAR)");
             SQLiteStatement statement = localStorage.compileStatement(sql);
@@ -125,15 +127,18 @@ public class FragmentAttendance extends Fragment {
             JSONArray jsonSubjectCode = jsonObject.getJSONArray("subjectCode");
             JSONArray jsonAttendedClasses = jsonObject.getJSONArray("classesAttended");
             JSONArray jsonBunkedClasses = jsonObject.getJSONArray("classesBunked");
+            JSONArray jsonPreviousClasses = jsonObject.getJSONArray("previousClasses");
             SubjectName.clear();
             SubjectCode.clear();
             AttendedClasses.clear();
             BunkedClasses.clear();
+            PreviousClasses.clear();
             for (int i = 0; i < jsonSubjectName.length(); i++) {
                 SubjectName.add(jsonSubjectName.getString(i));
                 SubjectCode.add(jsonSubjectCode.getString(i));
                 AttendedClasses.add(jsonAttendedClasses.getString(i));
                 BunkedClasses.add(jsonBunkedClasses.getString(i));
+                PreviousClasses.add(jsonPreviousClasses.getString(i));
             }
             Log.d("JSONFormat", "str: " + str);
             attendanceAdapter.notifyDataSetChanged();
@@ -158,6 +163,7 @@ public class FragmentAttendance extends Fragment {
                         SubjectCode = (ArrayList<String>) snapshot.getData().get("Subject Code");
                         AttendedClasses = (ArrayList<String>) snapshot.getData().get("Attended Classes");
                         BunkedClasses = (ArrayList<String>) snapshot.getData().get("Bunked Classes");
+                        PreviousClasses = (ArrayList<String>) snapshot.getData().get("Previous Classes");
                         storeDataOffline();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -190,6 +196,7 @@ public class FragmentAttendance extends Fragment {
                 SubjectCode.add(subjectCode.getText().toString());
                 AttendedClasses.add(classesAttended.getText().toString());
                 BunkedClasses.add(classesBunked.getText().toString());
+                PreviousClasses.add("NNN");
                 saveNotes();
                 attendanceAdapter.notifyDataSetChanged();
             }
@@ -212,6 +219,7 @@ public class FragmentAttendance extends Fragment {
         Notes.put("Subject Code", SubjectCode);
         Notes.put("Attended Classes", AttendedClasses);
         Notes.put("Bunked Classes", BunkedClasses);
+        Notes.put("Previous Classes", PreviousClasses);
         // Add a new document with a generated ID
         try {
             firebaseFirestore.collection("Users").document(googleSignIn.getId()).collection("Attendance").document(googleSignIn.getId())
