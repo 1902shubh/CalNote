@@ -29,15 +29,6 @@ Make sure you read App's [Privacy Policy](PRIVACY_POLICY.md) and [Terms and Cond
   - Request money from friends.
 - Chat
   - Add friends and send messages to them.
-- Friends
-  - Chat with friends.
-- Profile
-  - Update your Profile Picture
-  - Update your Status
-  - View other users profile
-- Notifications
-  - Notification when you have short attendance.
-  - Notification when you have a payment request.
 
 ## Installation
 
