@@ -17,7 +17,15 @@ Make sure you read App's [Privacy Policy](PRIVACY_POLICY.md) and [Terms and Cond
 - Attendance Manager
   - Store attendance on a daily basis.
   - Get Attendace Percentage and Notifications for classes.
-- FriendsPay
+- Notes
+  - Store notes on the go.
+  - Never fear losing any data.
+
+**Upcoming**
+
+- Chat
+  - Add friends and send messages to them.
+  - FriendsPay
   - Pay back or collect your debts. 
   - Easy to pay or recieve feature.
   - Linked with UPI id.
@@ -31,11 +39,6 @@ Make sure you read App's [Privacy Policy](PRIVACY_POLICY.md) and [Terms and Cond
 - Notifications
   - Notification when you have short attendance.
   - Notification when you have a payment request.
-
-**Upcoming**
-
-- Chat
-  - Add friends and send messages to them.
 
 ## Installation
 
