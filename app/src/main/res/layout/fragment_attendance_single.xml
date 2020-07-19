@@ -1,102 +1,202 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/subject_cardview"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="5dp"
     android:layout_marginTop="5dp"
     android:layout_marginEnd="5dp"
-    android:padding="10dp"
-    android:clickable="true"
-    android:focusable="true"
-    android:background="@drawable/custom_ripple"
     android:backgroundTint="@color/colorPrimaryDark"
-    app:cardCornerRadius="10dp"
     android:elevation="20dp"
     android:orientation="vertical"
+    app:cardCornerRadius="10dp"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:padding="10dp">
+        android:paddingHorizontal="5dp"
+        android:paddingVertical="10dp"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="210dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/subcode"
-                android:gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:fontFamily="@font/audiowide"
-                android:text="CODE"
-                android:textColor="@color/colorWhite"
-                android:textSize="35sp" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <Button
-                    android:id="@+id/attended"
-                    android:layout_width="90dp"
-                    android:layout_height="30dp"
-                    android:fontFamily="@font/advent_pro"
-                    android:textStyle="bold"
-                    android:background="@drawable/button_rounded_green"
-                    android:text="Attended" />
-
-                <Button
-                    android:id="@+id/bunked"
-                    android:layout_width="90dp"
-                    android:layout_height="30dp"
-                    android:textStyle="bold"
-                    android:layout_marginStart="10dp"
-                    android:fontFamily="@font/advent_pro"
-                    android:background="@drawable/button_rounded_green"
-                    android:text="Bunked" />
-
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="160dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_width="210dp"
+                android:layout_height="90dp"
+                android:layout_marginStart="10dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.033"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0">
 
                 <TextView
-                    android:id="@+id/class_attended"
+                    android:id="@+id/subcode"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0/0"
+                    android:layout_height="50dp"
+                    android:fontFamily="@font/audiowide"
+                    android:gravity="center"
+                    android:text="CODE"
                     android:textColor="@color/colorWhite"
-                    android:textSize="45sp" />
+                    android:textSize="35sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:id="@+id/attended"
+                        android:layout_width="90dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/button_rounded_green"
+                        android:fontFamily="@font/advent_pro"
+                        android:text="Attended"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/bunked"
+                        android:layout_width="90dp"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="10dp"
+                        android:background="@drawable/button_rounded_green"
+                        android:fontFamily="@font/advent_pro"
+                        android:text="Bunked"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
             </LinearLayout>
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="180dp"
+                android:layout_height="90dp"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0">
+
+                <TextView
+                    android:id="@+id/att_percent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/audiowide"
+                    android:text="00%"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="20sp"
+                    app:layout_constraintBottom_toBottomOf="@id/progressBar"
+                    app:layout_constraintEnd_toEndOf="@+id/progressBar"
+                    app:layout_constraintStart_toStartOf="@+id/progressBar"
+                    app:layout_constraintTop_toTopOf="@+id/progressBar" />
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="100dp"
+                    android:layout_height="80dp"
+                    android:indeterminate="false"
+                    android:max="100"
+                    android:progress="80"
+                    android:progressDrawable="@drawable/circular_progress_bar"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.8"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/att_more_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="10dp"
+            android:visibility="gone">
+
             <TextView
-                android:id="@+id/percentage"
+                android:id="@+id/subname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/advent_pro"
+                android:gravity="center"
+                android:text="SUBJECT NAME"
+                android:textAllCaps="true"
+                android:textColor="@color/colorWhite"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.226" />
+
+            <TextView
+                android:id="@+id/attendedClasses"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="95%"
-                android:textColor="@color/colorWarning"
-                android:textSize="20sp" />
-        </LinearLayout>
-    </LinearLayout>
+                android:layout_marginTop="2dp"
+                android:fontFamily="@font/advent_pro"
+                android:text="Attended: 0"
+                android:textAllCaps="true"
+                android:textColor="@color/colorButtonPressed"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/bunkedClasses"
+                app:layout_constraintHorizontal_bias="0.1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/subname"
+                app:layout_constraintVertical_bias="0.5" />
 
+            <TextView
+                android:id="@+id/bunkedClasses"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:fontFamily="@font/advent_pro"
+                android:text="Bunked: 0"
+                android:textAllCaps="true"
+                android:textColor="@color/colorButtonPressed"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/totalClasses"
+                app:layout_constraintHorizontal_bias="0.566"
+                app:layout_constraintStart_toEndOf="@+id/attendedClasses"
+                app:layout_constraintTop_toBottomOf="@+id/subname"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <TextView
+                android:id="@+id/totalClasses"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:fontFamily="@font/advent_pro"
+                android:text="Total: 0"
+                android:textAllCaps="true"
+                android:textColor="@color/colorButtonPressed"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.882"
+                app:layout_constraintStart_toEndOf="@+id/bunkedClasses"
+                app:layout_constraintTop_toBottomOf="@+id/subname"
+                app:layout_constraintVertical_bias="0.0" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </LinearLayout>
 </androidx.cardview.widget.CardView>

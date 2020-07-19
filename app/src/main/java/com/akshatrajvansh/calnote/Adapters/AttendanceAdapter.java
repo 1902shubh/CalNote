@@ -1,17 +1,21 @@
 package com.akshatrajvansh.calnote.Adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.akshatrajvansh.calnote.Fragments.FragmentAttendance;
 import com.akshatrajvansh.calnote.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -20,7 +24,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
-import com.google.firebase.firestore.ThrowOnExtraProperties;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,27 +48,29 @@ public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.Vi
         return holder;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         Log.d(TAG, "onBindViewHolder: called.");
-        //if (SubjectCode.get(position) != null && !SubjectCode.get(position).contains("CODE")) {
         try {
             holder.subjectCode.setText(FragmentAttendance.SubjectCode.get(position));
-            holder.attendance.setText(getAttendance(FragmentAttendance.AttendedClasses.get(position), FragmentAttendance.BunkedClasses.get(position)));
-            holder.percent.setText(getPercent(FragmentAttendance.AttendedClasses.get(position), FragmentAttendance.BunkedClasses.get(position)));
+            holder.subjectName.setText(FragmentAttendance.SubjectName.get(position));
+            holder.attendedClasses.setText("Attended: " + FragmentAttendance.AttendedClasses.get(position));
+            holder.bunkedClasses.setText("Bunked: " + FragmentAttendance.BunkedClasses.get(position));
+            String percent = getPercent(FragmentAttendance.AttendedClasses.get(position), FragmentAttendance.BunkedClasses.get(position)) + "%";
+            holder.totalClasses.setText(getTotal(FragmentAttendance.AttendedClasses.get(position), FragmentAttendance.BunkedClasses.get(position)));
+            holder.percentAttendance.setText(percent);
+            holder.progressBar.setProgress(Integer.parseInt(getPercent(FragmentAttendance.AttendedClasses.get(position), FragmentAttendance.BunkedClasses.get(position))));
 
-            holder.cardViewLayout.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    Toast.makeText(mContext, "Coming Soon", Toast.LENGTH_SHORT).show();
-                    return true;
-                }
-            });
+
             holder.cardViewLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Log.d(TAG, "onClick: clicked on: " + FragmentAttendance.SubjectCode.get(position));
-                    Toast.makeText(mContext, FragmentAttendance.SubjectCode.get(position), Toast.LENGTH_SHORT).show();
+                    if (holder.moreDetails.getVisibility() == View.VISIBLE)
+                        holder.moreDetails.setVisibility(View.GONE);
+                    else
+                        holder.moreDetails.setVisibility(View.VISIBLE);
                 }
             });
             holder.AttendedClasses.setOnClickListener(new View.OnClickListener() {
@@ -84,39 +89,9 @@ public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.Vi
                     UpdateCloud();
                 }
             });
-
-            holder.subjectCode.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Toast.makeText(mContext, FragmentAttendance.SubjectName.get(position), Toast.LENGTH_SHORT).show();
-                }
-            });
-
-            holder.attendance.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Toast.makeText(mContext, getPercent(FragmentAttendance.AttendedClasses.get(position), FragmentAttendance.BunkedClasses.get(position)), Toast.LENGTH_SHORT).show();
-                }
-            });
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public String getAttendance(String AttendedClasses, String BunkedClasses) {
-        return Integer.valueOf(AttendedClasses) + "/" + (Integer.parseInt(AttendedClasses) + Integer.parseInt(BunkedClasses));
-    }
-
-    public String getWarning(String AttendedClasses, String BunkedClasses) {
-        int att = Integer.parseInt(AttendedClasses);
-        int bun = Integer.parseInt(BunkedClasses);
-        int total = att + bun;
-        int percent = (att * 100) / total;
-        if (percent >= 80)
-            return "Good Relief";
-        else if (percent >= 75)
-            return "Watch Out!";
-        else return "Good Grief";
     }
 
     public String getPercent(String AttendedClasses, String BunkedClasses) {
@@ -124,8 +99,16 @@ public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.Vi
         int bun = Integer.parseInt(BunkedClasses);
         int total = att + bun;
         int percent = (att * 100) / total;
-        return percent + "%";
+        return String.valueOf(percent);
     }
+
+    public String getTotal(String AttendedClasses, String BunkedClasses) {
+        int att = Integer.parseInt(AttendedClasses);
+        int bun = Integer.parseInt(BunkedClasses);
+        int total = att + bun;
+        return "Total: "+ total;
+    }
+
 
     @Override
     public int getItemCount() {
@@ -135,8 +118,8 @@ public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.Vi
     void deleteItem(int position) {
         Toast.makeText(mContext, "Deleting " + FragmentAttendance.SubjectCode.get(position), Toast.LENGTH_SHORT).show();
         FragmentAttendance.SubjectCode.remove(position);
-            FragmentAttendance.AttendedClasses.remove(position);
-            FragmentAttendance.BunkedClasses.remove(position);
+        FragmentAttendance.AttendedClasses.remove(position);
+        FragmentAttendance.BunkedClasses.remove(position);
         FragmentAttendance.SubjectName.remove(position);
         FragmentAttendance.attendanceAdapter.notifyDataSetChanged();
         UpdateCloud();
@@ -169,20 +152,25 @@ public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.Vi
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView subjectCode;
-        TextView percent;
-        TextView attendance;
+        TextView subjectCode, subjectName, attendedClasses, bunkedClasses, totalClasses, percentAttendance;
         Button AttendedClasses, BunkedClasses;
         CardView cardViewLayout;
+        ConstraintLayout moreDetails;
+        ProgressBar progressBar;
 
         public ViewHolder(View itemView) {
             super(itemView);
             cardViewLayout = itemView.findViewById(R.id.subject_cardview);
             subjectCode = itemView.findViewById(R.id.subcode);
+            subjectName = itemView.findViewById(R.id.subname);
             AttendedClasses = itemView.findViewById(R.id.attended);
             BunkedClasses = itemView.findViewById(R.id.bunked);
-            percent = itemView.findViewById(R.id.percentage);
-            attendance = itemView.findViewById(R.id.class_attended);
+            totalClasses = itemView.findViewById(R.id.totalClasses);
+            percentAttendance = itemView.findViewById(R.id.att_percent);
+            attendedClasses = itemView.findViewById(R.id.attendedClasses);
+            bunkedClasses = itemView.findViewById(R.id.bunkedClasses);
+            moreDetails = itemView.findViewById(R.id.att_more_layout);
+            progressBar = itemView.findViewById(R.id.progressBar);
         }
     }
 }

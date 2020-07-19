@@ -3,6 +3,8 @@
     <color name="colorPrimary">#1B1931</color>
     <color name="colorPrimaryDark">#17152E</color>
     <color name="colorButtonPressed">#8AD1C0</color>
+    <color name="colorAccentAlt">#00DFAA</color>
+    <color name="colorRed">#D10000</color>
     <color name="colorAccent">#17152E</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBlack">#000000</color>
