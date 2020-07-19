@@ -22,14 +22,13 @@ Make sure you read App's [Privacy Policy](PRIVACY_POLICY.md) and [Terms and Cond
   - Never fear losing any data.
 
 **Upcoming**
-
-- Chat
-  - Add friends and send messages to them.
-  - FriendsPay
+- FriendsPay
   - Pay back or collect your debts. 
   - Easy to pay or recieve feature.
   - Linked with UPI id.
   - Request money from friends.
+- Chat
+  - Add friends and send messages to them.
 - Friends
   - Chat with friends.
 - Profile
