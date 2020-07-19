@@ -114,12 +114,6 @@ public class AttendanceAdapter extends RecyclerView.Adapter<AttendanceAdapter.Vi
         return "Total: " + total;
     }
 
-    public int getTotalInteger(String AttendedClasses, String BunkedClasses) {
-        int att = Integer.parseInt(AttendedClasses);
-        int bun = Integer.parseInt(BunkedClasses);
-        return att + bun;
-    }
-
     private void updatePreviousClasses(ViewHolder view, String event, int position) {
         String days = FragmentAttendance.PreviousClasses.get(position) + event;
         days = days.substring(1);
