@@ -19,7 +19,7 @@
             android:fontFamily="@font/audiowide"
             android:text="SUBJECT CODE"
             android:textColor="@color/colorPrimary"
-            android:textSize="20sp" />
+            android:textSize="15sp" />
 
 
         <EditText
@@ -30,7 +30,7 @@
             android:gravity="center"
             android:layout_marginStart="20dp"
             android:textColor="@color/colorTextDialog"
-            android:textSize="25sp">
+            android:textSize="20sp">
 
             <requestFocus />
         </EditText>
@@ -47,7 +47,7 @@
             android:fontFamily="@font/audiowide"
             android:text="SUBJECT NAME"
             android:textColor="@color/colorPrimary"
-            android:textSize="20sp" />
+            android:textSize="15sp" />
 
         <EditText
             android:id="@+id/subject_name"
@@ -57,7 +57,7 @@
             android:gravity="center"
             android:layout_marginStart="20dp"
             android:textColor="@color/colorTextDialog"
-            android:textSize="25sp" />
+            android:textSize="20sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -72,7 +72,7 @@
             android:fontFamily="@font/audiowide"
             android:text="CLASSES ATTENDED"
             android:textColor="@color/colorPrimary"
-            android:textSize="15sp" />
+            android:textSize="12sp" />
 
         <EditText
             android:id="@+id/attendedClasses"
@@ -83,7 +83,7 @@
             android:gravity="center"
             android:inputType="text"
             android:textColor="@color/colorTextDialog"
-            android:textSize="25sp">
+            android:textSize="20sp">
 
         </EditText>
     </LinearLayout>
@@ -100,7 +100,7 @@
             android:fontFamily="@font/audiowide"
             android:text="CLASSES BUNKED"
             android:textColor="@color/colorPrimary"
-            android:textSize="15sp" />
+            android:textSize="12sp" />
 
         <EditText
             android:id="@+id/bunkedClasses"
@@ -111,7 +111,7 @@
             android:gravity="center"
             android:inputType="text"
             android:textColor="@color/colorTextDialog"
-            android:textSize="25sp">
+            android:textSize="20sp">
 
         </EditText>
     </LinearLayout>
