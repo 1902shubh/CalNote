@@ -9,7 +9,7 @@ import android.os.Handler;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
-public class SplashScreen extends AppCompatActivity {
+public class SplashScreen extends AppCompatActivity { //splash screen activity launches first 
 
 
     GoogleSignInAccount account;
